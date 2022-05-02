@@ -17,14 +17,14 @@ public class Controller {
 
     public Controller() throws IOException {
         server = new Server(2343);
-        lp = new LoginPage(this);
+       // lp = new LoginPage(this);
 
     }
 
     public void signIn(String username) {
-        User user = new User(username);
-        client = new Client("127.0.0.1",2343, user);
-        mainFrame = new MainFrame( 600,600, this, user.getUsername());
+      //  User user = new User(username);
+       // client = new Client("127.0.0.1",2343, user);
+        //mainFrame = new MainFrame( 600,600, this, user.getUsername());
 
     }
 

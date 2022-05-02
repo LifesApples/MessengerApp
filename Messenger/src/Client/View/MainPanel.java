@@ -12,8 +12,9 @@ public class MainPanel extends JPanel implements ActionListener {
     private Controller controller;
     private Chattwindow chattWindow;
     private TextWindow textWindow;
-    private ProfilePic profilePic;
+    private JLabel profilePic;
     private JButton sendButton;
+    private ImageIcon icon;
 
     public MainPanel(int width, int height, Controller controller, String username) {
         super(null);
@@ -34,13 +35,11 @@ public class MainPanel extends JPanel implements ActionListener {
         textWindow = new TextWindow(width,height,controller,username);
         add(textWindow);
 
-        profilePic = new ProfilePic(controller);
-        profilePic.setLocation(450,400);
+
+        profilePic = new JLabel(new ImageIcon());
+        profilePic.setBounds(450, 400, 200, 200);
         add(profilePic);
 
-        profilePic = new ProfilePic(controller);
-        profilePic.setLocation(450,56);
-        add(profilePic);
 
         setBackground(Color.PINK);
 
@@ -51,6 +50,27 @@ public class MainPanel extends JPanel implements ActionListener {
 
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public TextWindow getTextWindow() {
+        return textWindow;
+    }
+
+    public void setTextWindow(TextWindow textWindow) {
+        this.textWindow = textWindow;
+    }
+
+
+
+    public void setIcon(Icon icon) {
+        profilePic.setIcon(icon);
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {

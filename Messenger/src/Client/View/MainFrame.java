@@ -21,4 +21,13 @@ public class MainFrame extends JFrame {
 
         setBackground(Color.BLACK);
     }
+
+    public void sendErrormessage (String str) {
+        JOptionPane.showMessageDialog(null, str);
+    }
+
+    public void setProfileGUI(String name, Icon icon) {
+        mainPanel.setIcon(icon);
+        mainPanel.setUsername(name);
+    }
 }
