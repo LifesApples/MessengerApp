@@ -1,6 +1,4 @@
-package Model;
-
-import org.w3c.dom.Text;
+package Client.Model;
 
 import javax.swing.*;
 

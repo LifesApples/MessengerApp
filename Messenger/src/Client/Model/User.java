@@ -1,6 +1,8 @@
-package Model;
+package Client.Model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private String userName;
 
     public User(String username) {

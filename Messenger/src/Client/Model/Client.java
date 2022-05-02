@@ -1,8 +1,9 @@
-package Model;
+package Client.Model;
 
 import java.io.*;
 import java.net.Socket;
 
+//
 public class Client {
     private String ip;
     private int port;

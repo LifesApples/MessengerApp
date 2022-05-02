@@ -1,4 +1,6 @@
-package Controller;
+package Client;
+
+import Client.Controller.Controller;
 
 import java.io.IOException;
 

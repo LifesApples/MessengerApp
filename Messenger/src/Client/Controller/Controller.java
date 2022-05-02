@@ -1,10 +1,10 @@
-package Controller;
+package Client.Controller;
 
-import Model.Client;
-import Model.Server;
-import Model.User;
-import View.LoginPage;
-import View.MainFrame;
+import Client.Model.Client;
+import Server.Model.Server;
+import Client.Model.User;
+import Client.View.LoginPage;
+import Client.View.MainFrame;
 
 import java.io.IOException;
 

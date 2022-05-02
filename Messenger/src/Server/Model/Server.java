@@ -1,13 +1,13 @@
-package Model;
+package Server.Model;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.Buffer;
 import java.util.ArrayList;
 
+//Textmessage som en textmessagee-object och user som en string
 public class Server {
 
     private int port;
@@ -65,6 +65,7 @@ public class Server {
                 String message,response;
                 this.socket = socket;
                 try {
+                    //Ändra till oos och ois
                     dos = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
                     dis = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
                     message = dis.readUTF();
