@@ -20,6 +20,8 @@ public class MainFrame extends JFrame {
         setVisible(true);
 
         setBackground(Color.BLACK);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
     }
 
     public void sendErrormessage (String str) {

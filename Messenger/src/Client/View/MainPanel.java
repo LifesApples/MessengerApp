@@ -13,7 +13,7 @@ public class MainPanel extends JPanel implements ActionListener {
     private Chattwindow chattWindow;
     private TextWindow textWindow;
     private JLabel profilePic;
-    private JButton sendButton;
+    private JButton sendButton, contactList;
     private ImageIcon icon;
 
     public MainPanel(int width, int height, Controller controller, String username) {
@@ -37,7 +37,7 @@ public class MainPanel extends JPanel implements ActionListener {
 
 
         profilePic = new JLabel(new ImageIcon());
-        profilePic.setBounds(450, 400, 200, 200);
+        profilePic.setBounds(450, 400, 100, 100);
         add(profilePic);
 
 

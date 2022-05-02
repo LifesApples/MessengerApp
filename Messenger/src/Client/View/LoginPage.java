@@ -63,6 +63,7 @@ public class LoginPage extends JFrame {
             if(e.getSource() == loginButton){
                 System.out.println("Login was pressed");
                 controller.signIn(username.getText());
+                dispose();
             }
         }
     }

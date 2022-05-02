@@ -33,7 +33,7 @@ public class Client {
 
             oos = new ObjectOutputStream(socket.getOutputStream());
 
-           // ois = new ObjectInputStream(socket.getInputStream());
+        //    ois = new ObjectInputStream(socket.getInputStream());
 
 
         } catch (IOException e) {

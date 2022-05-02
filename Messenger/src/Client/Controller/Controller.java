@@ -7,6 +7,7 @@ import Client.View.LoginPage;
 import Client.View.MainFrame;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 
 public class Controller {
@@ -23,7 +24,7 @@ public class Controller {
     }
 
     public void signIn(String username) {
-        User user = new User(username, new ImageIcon("files/knight.jpg"));
+        User user = new User(username, new ImageIcon(new ImageIcon("files/knight.jpg").getImage().getScaledInstance(100,100, Image.SCALE_DEFAULT)));
         System.out.println("icon");
         client = new Client("127.0.0.1",2343, user, this);
         System.out.println("client");
@@ -38,7 +39,11 @@ public class Controller {
     }
 
     public void sendGUIerror(String str) {
+        mainFrame.sendErrormessage(str);
+    }
 
+    public void disconnectClients () {
+        client.disconnect();
     }
 }
 
