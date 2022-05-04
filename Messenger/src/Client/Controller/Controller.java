@@ -1,6 +1,7 @@
 package Client.Controller;
 
 import Client.Model.Client;
+import Client.Model.Contacts;
 import Server.Model.Server;
 import Client.Model.User;
 import Client.View.LoginPage;
@@ -16,16 +17,17 @@ public class Controller {
     private Server server;
     private Client client;
     private User myUser, contactUser;
+    private Contacts contacts;
 
 
     public Controller() throws IOException {
+        contacts  = new Contacts();
         server = new Server(2343);
         lp = new LoginPage(this);
 
     }
 
-    public void signIn(String username) {
-        myUser = new User(username, new ImageIcon(new ImageIcon("files/knight.jpg").getImage().getScaledInstance(100,100, Image.SCALE_DEFAULT)));
+    public void signIn() {
         client = new Client("127.0.0.1",2343, myUser, this);
         System.out.println("client");
         mainFrame = new MainFrame( 600,600, this, myUser.getUsername());
@@ -52,6 +54,14 @@ public class Controller {
     public void disconnectClients () {
         client.disconnect();
     }
+
+    public void setMyUser(String username, String path) {
+        myUser = new User(username, new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(100,100, Image.SCALE_DEFAULT)));
+    }
+    public void setMyUser(String username) {
+       myUser = new User(username);
+    }
+
 
 
 }

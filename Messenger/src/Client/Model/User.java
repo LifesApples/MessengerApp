@@ -8,6 +8,11 @@ public class User implements Serializable {
     private String userName;
     private Icon icon;
 
+    public User(String username) {
+        this.userName = username;
+
+    }
+
     public User(String username, Icon icon) {
         this.userName = username;
         this.icon = icon;

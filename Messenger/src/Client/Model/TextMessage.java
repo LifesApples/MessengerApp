@@ -1,9 +1,11 @@
 package Client.Model;
 
 import javax.swing.*;
+import java.io.Serializable;
 
-public class TextMessage {
+public class TextMessage implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private String message;
     private Icon icon;
 
