@@ -28,7 +28,8 @@ public class LoginPage extends JFrame {
     private class MainLoginPanel extends JPanel implements ActionListener {
         private JTextField username;
         private JTextField password;
-        private JButton loginButton;
+        private JButton loginButton, selectPictureButton;
+        private JFileChooser profilePicture;
 
         public MainLoginPanel(int width, int height) {
             super(null);
@@ -41,10 +42,10 @@ public class LoginPage extends JFrame {
 
 
 
-            password = new JTextField();
-            password.setSize(150,30);
-            password.setLocation(400,395);
-            add(password);
+            profilePicture = new JFileChooser();
+            profilePicture.setSize(width, 300);
+            profilePicture.setLocation(400, 395);
+            add(profilePicture);
 
             loginButton = new JButton();
             loginButton.setSize(70,40);

@@ -7,8 +7,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MainPanel extends JPanel implements ActionListener {
-    private String username;
+public class MainPanel extends JFrame implements ActionListener {
+
+    private JPanel mainPanel;
+    private String contactName, username;
     private Controller controller;
     private Chattwindow chattWindow;
     private TextWindow textWindow;
@@ -16,32 +18,39 @@ public class MainPanel extends JPanel implements ActionListener {
     private JButton sendButton, contactList;
     private ImageIcon icon;
 
-    public MainPanel(int width, int height, Controller controller, String username) {
-        super(null);
+    public MainPanel(int width, int height, Controller controller, String contactName, String username) {
+
         this.controller = controller;
         this.username = username;
-        setSize(100, height/8);
+        this.contactName = contactName;
+        setSize(width, height);
 
         sendButton = new JButton();
         sendButton.setSize(80,50);
         sendButton.setLocation(360,430);
         sendButton.setText("Send");
-        add(sendButton);
         sendButton.addActionListener(this);
 
         chattWindow = new Chattwindow(controller);
-        add(chattWindow);
 
         textWindow = new TextWindow(width,height,controller,username);
-        add(textWindow);
 
 
         profilePic = new JLabel(new ImageIcon());
         profilePic.setBounds(450, 400, 100, 100);
-        add(profilePic);
 
 
+        mainPanel = new JPanel(null);
+        mainPanel.add(sendButton);
+        mainPanel.add(chattWindow);
+        mainPanel.add(textWindow);
+        mainPanel.add(profilePic);
+        mainPanel.setBounds(0, 0, width, height);
+
+        setVisible(true);
+        setContentPane(mainPanel);
         setBackground(Color.PINK);
+
 
 
     }

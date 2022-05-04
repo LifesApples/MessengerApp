@@ -15,6 +15,7 @@ public class TextWindow extends JTextArea {
         this.controller = controller;
         setSize(435, 150);
         setLocation(10,400);
+        setBorder(BorderFactory.createTitledBorder("Text Window"));
 
         setBackground(Color.white);
     }

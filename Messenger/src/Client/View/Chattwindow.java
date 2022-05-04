@@ -14,5 +14,6 @@ public class Chattwindow extends JPanel {
         setSize(435, 300);
         setLocation(10, 55);
         setBackground(Color.white);
+        setBorder(BorderFactory.createTitledBorder("ChatWindow"));
     }
 }
