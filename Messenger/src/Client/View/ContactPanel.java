@@ -90,6 +90,7 @@ public class ContactPanel extends JPanel implements ActionListener {
         return myContacts.getSelectedIndex();
     }
 
+
     public void updateOnlineUsers(String[] list) {
         onlineUsers.setListData(list);
     }
@@ -120,10 +121,7 @@ public class ContactPanel extends JPanel implements ActionListener {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                index = onlineUsers.getSelectedIndex();
 
-                System.out.println(e.paramString());
-                userMarked = e.paramString();
             }
 
             @Override
@@ -157,7 +155,7 @@ public class ContactPanel extends JPanel implements ActionListener {
             @Override
             public void mousePressed(MouseEvent e) {
 
-                userMarked = e.paramString();
+
             }
 
             @Override

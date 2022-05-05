@@ -62,6 +62,7 @@ public class Controller {
         client.disconnect();
     }
 
+    public void setContactUser () {}
 
     public void setMyUser(String username, String path) {
         myUser = new User(username, new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(100,100, Image.SCALE_DEFAULT)));

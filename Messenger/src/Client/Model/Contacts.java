@@ -35,10 +35,13 @@ public class Contacts {
 
     public void readContactfile()  throws IOException, ClassNotFoundException{
         try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(contactfile)))) {
-            int n = ois.readInt();
-            for (int i = 0; i < n; i++) {
-                contactlist.add((User) ois.readObject());
+                int n = ois.readInt();
+                for (int i = 0; i < n; i++) {
+                    contactlist.add((User) ois.readObject());
             }
+        }
+        catch (EOFException e) {
+
         }
 
     }
