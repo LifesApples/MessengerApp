@@ -58,6 +58,10 @@ public class Client {
         contacts.add(user);
     }
 
+    public void setContacts(ArrayList<User> contacts) {
+        this.contacts = contacts;
+    }
+
     public ArrayList<User> getContacts() {
         return contacts;
     }

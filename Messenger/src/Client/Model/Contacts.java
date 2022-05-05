@@ -44,7 +44,7 @@ public class Contacts {
     }
 
     public void writeContactfile() throws IOException {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("files/" + filename + ".dat")))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(contactfile)))) {
             oos.writeInt(contactlist.size());
             for (User u : contactlist) {
                 oos.writeObject(u);

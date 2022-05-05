@@ -13,11 +13,13 @@ import java.awt.event.MouseListener;
 
 public class ContactPanel extends JPanel implements ActionListener {
     private Controller controller;
-    private JPanel mainPanel;
+    private JPanel mainPanel, buttonPanel, listPanel;
     private JList onlineUsers, myContacts;
     private JScrollPane o, m;
     private int height;
     private int width;
+    private JButton btnAddContact, btnRemoveContact;
+    private String userMarked;
 
 
     public ContactPanel(int width, int height, Controller controller) {
@@ -34,6 +36,10 @@ public class ContactPanel extends JPanel implements ActionListener {
 
 
     public void initiateButtons() {
+        btnAddContact = new JButton("Add Contact");
+        //btnAddContact.addActionListener(l -> controller.addContact(userMarked));
+        btnRemoveContact = new JButton("Remove Contact");
+       // btnRemoveContact.addActionListener(l -> controller.removeContact(userMarked));
 
     }
 
@@ -55,11 +61,22 @@ public class ContactPanel extends JPanel implements ActionListener {
     }
 
     public void initiatePanels() {
-        mainPanel = new JPanel(new GridLayout(3, 1));
-        mainPanel.setName("Contacts");
-        mainPanel.add(m);
-        mainPanel.add(o);
-        mainPanel.setBounds(0, 0, width - 40, height - 40);
+
+        listPanel = new JPanel(new GridLayout(3, 1));
+        listPanel.setName("Contacts");
+        listPanel.add(m);
+        listPanel.add(o);
+        listPanel.setBounds(0, 0, width - 40, height - 40);
+
+        buttonPanel = new JPanel(new GridLayout(1,2));
+        buttonPanel.add(btnAddContact);
+        buttonPanel.add(btnRemoveContact);
+        buttonPanel.setBounds(20, height-150, 300, 50);
+
+        mainPanel = new JPanel(null);
+        mainPanel.setBounds(0,0, width, height);
+        mainPanel.add(listPanel);
+        mainPanel.add(buttonPanel);
 
         super.add(mainPanel);
 
@@ -88,10 +105,11 @@ public class ContactPanel extends JPanel implements ActionListener {
 
     public void addListener() {
         onlineUsers.addMouseListener(new MouseListener() {
+            int index;
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    int index = onlineUsers.getMaxSelectionIndex();
+                      index = onlineUsers.getMaxSelectionIndex();
                     if (index > -1) {
                         controller.openChatWindow();
                     }
@@ -102,7 +120,10 @@ public class ContactPanel extends JPanel implements ActionListener {
 
             @Override
             public void mousePressed(MouseEvent e) {
+                index = onlineUsers.getSelectedIndex();
 
+                System.out.println(e.paramString());
+                userMarked = e.paramString();
             }
 
             @Override
@@ -136,6 +157,7 @@ public class ContactPanel extends JPanel implements ActionListener {
             @Override
             public void mousePressed(MouseEvent e) {
 
+                userMarked = e.paramString();
             }
 
             @Override

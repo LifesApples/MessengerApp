@@ -4,6 +4,7 @@ import Client.Controller.Controller;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class MainFrame extends JFrame {
     private Controller controller;
@@ -42,5 +43,9 @@ public class MainFrame extends JFrame {
 
     public void openChatwindow(String username, String contactName) {
         mainPanel = new MainPanel(width, height, controller, contactName, username);
+    }
+
+    public void setContacts(String[] contacts) {
+        contactPanel.updateMyContacts(contacts);
     }
 }

@@ -31,9 +31,16 @@ public class Controller {
         client = new Client("127.0.0.1",2343, myUser, this);
         System.out.println("client");
         mainFrame = new MainFrame( 600,600, this, myUser.getUsername());
+        client.setContacts(contacts.getContactlist());
+        setUpContactsGUI();
 
+    }
 
-
+    public void setUpContactsGUI() {
+        String[] contacts = new String[client.getContacts().size()];
+        for (int i = 0; i < contacts.length; i++) {
+            contacts[i] = client.getContacts().get(i).getUsername();
+        }
     }
     public void setProfile() {
         mainFrame.setProfileGUI(myUser.getUsername(), myUser.getIcon() );
@@ -55,11 +62,15 @@ public class Controller {
         client.disconnect();
     }
 
+
     public void setMyUser(String username, String path) {
         myUser = new User(username, new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(100,100, Image.SCALE_DEFAULT)));
+
     }
     public void setMyUser(String username) {
        myUser = new User(username);
+
+
     }
 
 
