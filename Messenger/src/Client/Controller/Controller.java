@@ -10,6 +10,7 @@ import Client.View.MainFrame;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Controller {
     private MainFrame mainFrame;
@@ -17,11 +18,10 @@ public class Controller {
     private Server server;
     private Client client;
     private User myUser, contactUser;
-    private Contacts contacts;
 
 
     public Controller() throws IOException {
-        contacts  = new Contacts();
+
         server = new Server(2343);
         lp = new LoginPage(this);
 
@@ -35,12 +35,24 @@ public class Controller {
 
     }
 
+
     public void setUpContactsGUI() {
-        String[] contacts = new String[client.getContacts().size()];
+        String[] contacts = new String[client.getContacts().getContactlist().size()];
         for (int i = 0; i < contacts.length; i++) {
-            contacts[i] = client.getContacts().get(i).getUsername();
+            contacts[i] =  client.getContacts().getContactlist().get(i).getUsername();;
+
+        }
+        mainFrame.setContacts(contacts);
+    }
+
+    public void setUpOnlineUsersGUI (ArrayList<User> users) {
+        String[] onlineUsers = new String[users.size()];
+        for (int i = 0; i < onlineUsers.length; i++) {
+            onlineUsers[i] = users.get(i).getUsername();
         }
     }
+
+
     public void setProfile() {
         mainFrame.setProfileGUI(myUser.getUsername(), myUser.getIcon() );
     }
@@ -70,7 +82,26 @@ public class Controller {
     public void setMyUser(String username) {
        myUser = new User(username);
 
+    }
 
+    public void addContact(String username) {
+        client.addOnlineUser(new User("test1"));
+        for (User u : client.getOnlineUsers()) {
+            if (u.getUsername().equals(username)) {
+                client.addContact(u);
+
+            }
+        }
+        setUpContactsGUI();
+    }
+    public void removeContact(String username) {
+        for (User u : client.getContacts().getContactlist()) {
+            System.out.println(u.getUsername());
+            if (u.getUsername().equals(username)) {
+                client.removeContact(u);
+            }
+        }
+        setUpContactsGUI();
     }
 
 

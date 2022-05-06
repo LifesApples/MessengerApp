@@ -15,13 +15,15 @@ public class Client {
     private ObjectInputStream ois;
     private User user;
     private Controller controller;
-    private ArrayList<User> contacts;
+    private Contacts contacts;
+    private ArrayList<User> onlineUsers = new ArrayList<>();
 
     public Client(String ip, int port, User user, Controller controller) {
         this.ip = ip;
         this.port = port;
         this.user = user;
         this.controller = controller;
+        contacts = new Contacts();
         Connect();
     }
 
@@ -55,15 +57,31 @@ public class Client {
     }
 
     public void addContact(User user) {
-        contacts.add(user);
+        contacts.addContact(user);
     }
 
-    public void setContacts(ArrayList<User> contacts) {
+    public void removeContact(User user) {
+        contacts.removeContact(user);
+    }
+    public Contacts getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(Contacts contacts) {
         this.contacts = contacts;
     }
 
-    public ArrayList<User> getContacts() {
-        return contacts;
+    public ArrayList<User> getOnlineUsers() {
+        return onlineUsers;
+    }
+
+    public void setOnlineUsers(ArrayList<User> onlineUsers) {
+        this.onlineUsers = onlineUsers;
+    }
+
+    public void addOnlineUser(User user) {
+        onlineUsers.add(user);
+        controller.setUpOnlineUsersGUI(onlineUsers);
     }
 
     public class Listener extends Thread {
@@ -75,7 +93,7 @@ public class Client {
                     Object object = ois.readObject();
 
                     if (object instanceof User) {
-                        addContact((User) object);
+                        addOnlineUser((User) object);
                     }
 
                     if (object instanceof TextMessage) {

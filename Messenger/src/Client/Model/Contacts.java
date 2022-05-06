@@ -65,7 +65,36 @@ public class Contacts {
     }
 
     public void addContact(User user ) {
-        contactlist.add(user);
+        Boolean exist = false;
+        for (User u : contactlist) {
+            if (u.getUsername().equals(user.getUsername())) {
+                exist = true;
+            }
+        }
+        if (!exist)
+            contactlist.add(user);
+        try {
+            writeContactfile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-}
+
+    public void removeContact(User user) {
+        for (User u: contactlist) {
+            if (u.getUsername().equals(user)) {
+                contactlist.remove(u);
+                try {
+                    System.out.println(contactlist.size());
+                    writeContactfile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            }
+        }
+
+    }
+
+
 

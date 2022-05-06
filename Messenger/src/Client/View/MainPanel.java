@@ -31,13 +31,17 @@ public class MainPanel extends JFrame implements ActionListener {
         sendButton.setText("Send");
         sendButton.addActionListener(this);
 
-        chattWindow = new Chattwindow(controller);
+        chattWindow = new Chattwindow(controller, contactName);
+
 
         textWindow = new TextWindow(width,height,controller,username);
 
 
         profilePic = new JLabel(new ImageIcon());
         profilePic.setBounds(450, 400, 100, 100);
+
+
+
 
 
         mainPanel = new JPanel(null);

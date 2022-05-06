@@ -30,16 +30,17 @@ public class ContactPanel extends JPanel implements ActionListener {
         initiateLists();
         initiateButtons();
         initiatePanels();
-        updateMyContacts(new String[]{"test1", "test2"});
+        updateOnlineUsers(new String[]{"test1", "test2"});
+
 
     }
 
 
     public void initiateButtons() {
         btnAddContact = new JButton("Add Contact");
-        //btnAddContact.addActionListener(l -> controller.addContact(userMarked));
+        btnAddContact.addActionListener(this);
         btnRemoveContact = new JButton("Remove Contact");
-       // btnRemoveContact.addActionListener(l -> controller.removeContact(userMarked));
+        btnRemoveContact.addActionListener(this);
 
     }
 
@@ -101,6 +102,12 @@ public class ContactPanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnAddContact) {
+            controller.addContact(onlineUsers.getSelectedValue().toString());
+        }
+        if (e.getSource() == btnRemoveContact) {
+            controller.removeContact(myContacts.getSelectedValue().toString());
+        }
 
     }
 
@@ -117,8 +124,6 @@ public class ContactPanel extends JPanel implements ActionListener {
                 }
 
             }
-
-
             @Override
             public void mousePressed(MouseEvent e) {
 

@@ -48,4 +48,8 @@ public class MainFrame extends JFrame {
     public void setContacts(String[] contacts) {
         contactPanel.updateMyContacts(contacts);
     }
+
+    public void setOnlineUsers(String[] onlineUsers) {
+        contactPanel.updateOnlineUsers(onlineUsers);
+    }
 }
