@@ -1,5 +1,9 @@
 package Server.Model;
 
+import Client.Model.TextMessage;
+import Client.Model.User;
+
+import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
@@ -58,18 +62,28 @@ public class Server {
 
         private class ClientHandler extends Thread{
             private Socket socket;
-            private DataOutputStream dos;
-            private DataInputStream dis;
+            private ObjectOutputStream oos;
+            private ObjectInputStream ois;
+            private User user;
+
 
             public ClientHandler(Socket socket) {
                 String message,response;
                 this.socket = socket;
                 try {
-                    //Ändra till oos och ois
-                    dos = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-                    dis = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-                    message = dis.readUTF();
-                    System.out.println("New client is: " + message);
+
+                    oos = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+                    ois = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+                    Object object= ois.readUTF();
+                    if(object instanceof User){
+                        System.out.println("User object found");
+                    }
+                    else if(object instanceof TextMessage){
+                        System.out.println("User sent text");
+                    }
+
+                  //System.out.println("Client: " + user.getUsername() + " connected." +
+                    //        " Picture detected: " + user.getProfilePic);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
