@@ -97,12 +97,13 @@ public class Controller {
         setUpContactsGUI();
     }
     public void removeContact(String username) {
-        for (User u : client.getContacts().getContactlist()) {
-            System.out.println(u.getUsername());
-            if (u.getUsername().equals(username)) {
-                client.removeContact(u);
+
+        for (int i = 0; i < client.getContacts().getContactlist().size(); i++) {
+            if (client.getContacts().getContactlist().get(i).getUsername().equals(username)) {
+                client.getContacts().getContactlist().remove(i);
             }
         }
+
         setUpContactsGUI();
     }
 

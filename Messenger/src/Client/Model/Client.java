@@ -60,9 +60,7 @@ public class Client {
         contacts.addContact(user);
     }
 
-    public void removeContact(User user) {
-        contacts.removeContact(user);
-    }
+
     public Contacts getContacts() {
         return contacts;
     }
