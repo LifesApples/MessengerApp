@@ -66,8 +66,10 @@ public class Controller {
     }
 
     public void sendGUIerror(String str) {
-        mainFrame.sendErrormessage(str);
+       // mainFrame.sendErrormessage(str);
     }
+
+
 
     public void disconnectClients () {
         client.disconnect();

@@ -33,9 +33,9 @@ public class Client {
             System.out.println("Connecting");
             socket = new Socket(ip, port);
 
-            oos = new ObjectOutputStream(socket.getOutputStream());
+            oos = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             oos.writeObject(user);
-        //    ois = new ObjectInputStream(socket.getInputStream());
+            ois = new ObjectInputStream(new BufferedInputStream (socket.getInputStream()));
 
 
         } catch (IOException e) {

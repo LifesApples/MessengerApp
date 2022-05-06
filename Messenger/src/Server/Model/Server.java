@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 //Textmessage som en textmessagee-object och user som en string
+//Tidsstämpel sköts här
 public class Server {
 
     private int port;
@@ -66,7 +67,7 @@ public class Server {
             private ObjectInputStream ois;
             private User user;
 
-
+            //User
             public ClientHandler(Socket socket) {
                 String message,response;
                 this.socket = socket;
@@ -74,7 +75,7 @@ public class Server {
 
                     oos = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
                     ois = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
-                    Object object= ois.readUTF();
+                    Object object = ois.readObject();
                     if(object instanceof User){
                         System.out.println("User object found");
                     }
@@ -84,7 +85,9 @@ public class Server {
 
                   //System.out.println("Client: " + user.getUsername() + " connected." +
                     //        " Picture detected: " + user.getProfilePic);
-                } catch (IOException e) {
+                } catch (EOFException e){
+
+                } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
 
