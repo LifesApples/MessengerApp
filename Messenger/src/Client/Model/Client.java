@@ -34,7 +34,7 @@ public class Client {
             socket = new Socket(ip, port);
 
             oos = new ObjectOutputStream(socket.getOutputStream());
-
+            oos.writeObject(user);
         //    ois = new ObjectInputStream(socket.getInputStream());
 
 

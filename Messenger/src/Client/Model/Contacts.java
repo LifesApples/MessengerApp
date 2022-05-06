@@ -82,7 +82,7 @@ public class Contacts {
 
     public void removeContact(User user) {
         for (User u: contactlist) {
-            if (u.getUsername().equals(user)) {
+            if (u.getUsername().equals(user.getUsername())) {
                 contactlist.remove(u);
                 try {
                     System.out.println(contactlist.size());
