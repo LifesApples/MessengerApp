@@ -31,7 +31,6 @@ public class Controller {
         client = new Client("127.0.0.1",2343, myUser, this);
         System.out.println("client");
         mainFrame = new MainFrame( 600,600, this, myUser.getUsername());
-        client.setContacts(contacts.getContactlist());
         setUpContactsGUI();
 
     }

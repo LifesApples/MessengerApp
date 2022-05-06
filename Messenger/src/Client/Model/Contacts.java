@@ -63,5 +63,9 @@ public class Contacts {
     public void setContactlist(ArrayList<User> contactlist) {
         this.contactlist = contactlist;
     }
+
+    public void addContact(User user ) {
+        contactlist.add(user);
+    }
 }
 
