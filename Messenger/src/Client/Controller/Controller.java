@@ -50,6 +50,7 @@ public class Controller {
         for (int i = 0; i < onlineUsers.length; i++) {
             onlineUsers[i] = users.get(i).getUsername();
         }
+        mainFrame.setOnlineUsers(onlineUsers);
     }
 
 

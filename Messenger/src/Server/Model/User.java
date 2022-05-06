@@ -1,4 +1,4 @@
-package Server.Model;
+/*package Server.Model;
 
 import java.io.Serializable;
 
@@ -18,3 +18,5 @@ public class User implements Serializable {
         this.userName = username;
     }
 }
+
+ */

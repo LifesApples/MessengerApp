@@ -81,8 +81,14 @@ public class ContactPanel extends JPanel implements ActionListener {
 
         super.add(mainPanel);
 
+
+
     }
 
+    public void setContactOnline(int index) {
+        myContacts.setSelectedIndex(index);
+        myContacts.setSelectionForeground(Color.GREEN);
+    }
     public int getOnlineUsersIndex() {
         return onlineUsers.getSelectedIndex();
     }

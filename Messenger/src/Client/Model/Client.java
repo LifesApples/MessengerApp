@@ -35,7 +35,8 @@ public class Client {
 
             oos = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             oos.writeObject(user);
-            ois = new ObjectInputStream(new BufferedInputStream (socket.getInputStream()));
+            user.setStatus(1);
+         //   ois = new ObjectInputStream(new BufferedInputStream (socket.getInputStream()));
 
 
         } catch (IOException e) {
@@ -53,6 +54,7 @@ public class Client {
 
     public void disconnect() {
         System.out.println("Disconnect");
+        user.setStatus(0);
         disconnect();
     }
 
@@ -73,15 +75,20 @@ public class Client {
         return onlineUsers;
     }
 
-    public void setOnlineUsers(ArrayList<User> onlineUsers) {
-        this.onlineUsers = onlineUsers;
-    }
+
 
     public void addOnlineUser(User user) {
         onlineUsers.add(user);
         controller.setUpOnlineUsersGUI(onlineUsers);
     }
 
+    public void checkContactOnline(User user) {
+        for (User u : contacts.getContactlist()) {
+            if (u.getUsername().equals(user.getUsername())) {
+                //controller set online
+            }
+        }
+    }
     public class Listener extends Thread {
         public synchronized void run() {
             while(true) {

@@ -5,3 +5,5 @@ out/production/MessengerApp2/Client/Model/TextMessage.class
 out/production/MessengerApp2/Client/Model/Contacts.class
 files/contacts.dat
 contacts.txt
+*.class
+*.class
