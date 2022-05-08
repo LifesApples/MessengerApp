@@ -35,7 +35,7 @@ public class Client {
 
             oos = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             oos.writeObject(user);
-            user.setStatus(1);
+          //  user.setStatus(1);
          //   ois = new ObjectInputStream(new BufferedInputStream (socket.getInputStream()));
 
 
@@ -54,7 +54,7 @@ public class Client {
 
     public void disconnect() {
         System.out.println("Disconnect");
-        user.setStatus(0);
+      //  user.setStatus(0);
         disconnect();
     }
 
@@ -102,7 +102,7 @@ public class Client {
                     }
 
                     if (object instanceof TextMessage) {
-                        //controller append message in gui
+                       controller.appendTextMessageGUI(object);
                     }
 
                     if (object instanceof String) {

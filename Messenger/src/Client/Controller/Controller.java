@@ -2,6 +2,7 @@ package Client.Controller;
 
 import Client.Model.Client;
 import Client.Model.Contacts;
+import Client.Model.TextMessage;
 import Server.Model.Server;
 import Client.Model.User;
 import Client.View.LoginPage;
@@ -62,9 +63,13 @@ public class Controller {
         mainFrame.openChatwindow(myUser.getUsername(), "TESTUSER");
         setProfile();
     }
-    public void sendMessage(String message, String username) {
-        System.out.println(username + " said: " + message);
+    public void sendMessage(String message) {
+
     }
+    public void sendMessage(String message, String path) {
+        TextMessage m = new TextMessage(message, new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(30,30, Image.SCALE_DEFAULT)));
+    }
+
 
     public void sendGUIerror(String str) {
        // mainFrame.sendErrormessage(str);
@@ -108,6 +113,15 @@ public class Controller {
         setUpContactsGUI();
     }
 
+    public void appendTextMessageGUI(Object obj) {
+        if (obj instanceof TextMessage) {
+            mainFrame.appendTextMessageGUI(((TextMessage) obj).getIcon());
+            mainFrame.appendTextMessageGUI(((TextMessage) obj).getMessage());
+            mainFrame.appendTextMessageGUI(((TextMessage) obj).getSender().getUsername());
+            mainFrame.appendTextMessageGUI(((TextMessage) obj).getTimeSent());
+        }
+
+    }
 
 
 }

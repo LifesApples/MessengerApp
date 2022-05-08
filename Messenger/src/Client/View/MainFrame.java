@@ -52,4 +52,8 @@ public class MainFrame extends JFrame {
     public void setOnlineUsers(String[] onlineUsers) {
         contactPanel.updateOnlineUsers(onlineUsers);
     }
+
+    public void appendTextMessageGUI(Object obj) {
+        mainPanel.getChattWindow().addMessage(obj);
+    }
 }

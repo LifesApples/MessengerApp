@@ -1,6 +1,6 @@
 package Server;
 
-import Client.Controller.Controller;
+import Server.Controller.Controller;
 
 import java.io.IOException;
 
