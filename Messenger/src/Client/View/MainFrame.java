@@ -54,6 +54,6 @@ public class MainFrame extends JFrame {
     }
 
     public void appendTextMessageGUI(Object obj) {
-        mainPanel.getChattWindow().addMessage(obj);
+        mainPanel.addMessage(obj);
     }
 }

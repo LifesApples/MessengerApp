@@ -9,7 +9,7 @@ import java.awt.*;
 public class Chattwindow extends JPanel {
     private Controller controller;
     private String contactName;
-    private DefaultListModel<Object> messageList;
+    private DefaultListModel<Object> messageList = new DefaultListModel<>();
 
     public Chattwindow(Controller controller, String contactName) {
         super(null);
@@ -19,12 +19,11 @@ public class Chattwindow extends JPanel {
         setLocation(10, 55);
         setBackground(Color.white);
         setBorder(BorderFactory.createTitledBorder("Chat with " + contactName));
-    }
 
-    private void initiateListModel() {
-        messageList = new DefaultListModel<>();
 
     }
+
+
 
     public DefaultListModel<Object> getMessageList() {
         return messageList;

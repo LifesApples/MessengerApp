@@ -17,3 +17,4 @@ out/production/MessengerApp2/Client/View/ContactPanel$1.class
 out/production/MessengerApp2/Client/View/Chattwindow.class
 out/production/MessengerApp2/Client/Model/Client.class
 out/production/MessengerApp2/Client/Model/Client$Listener.class
+*.class

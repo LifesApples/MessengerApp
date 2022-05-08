@@ -9,9 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import static javax.print.attribute.standard.Chromaticity.COLOR;
+
 public class MainPanel extends JFrame implements ActionListener {
 
-    private JPanel mainPanel;
+    private JPanel mainPanel, chatWindow;
     private String contactName, username;
     private Controller controller;
     private Chattwindow chattWindow;
@@ -21,6 +23,9 @@ public class MainPanel extends JFrame implements ActionListener {
     private ImageIcon icon;
     private JFileChooser fileChooser;
     private File file;
+    private JList messageList;
+    private DefaultListModel dlm = new DefaultListModel();
+
 
     public MainPanel(int width, int height, Controller controller, String contactName, String username) {
 
@@ -28,12 +33,12 @@ public class MainPanel extends JFrame implements ActionListener {
         this.username = username;
         this.contactName = contactName;
         setSize(width, height);
-
+        initiateList();
         initiateButtons();
-
+        initiateChatWindow();
         chattWindow = new Chattwindow(controller, contactName);
 
-        textWindow = new TextWindow(width,height,controller,username);
+        textWindow = new TextWindow(width, height, controller, username);
 
         profilePic = new JLabel(new ImageIcon());
         profilePic.setBounds(450, 400, 100, 100);
@@ -42,7 +47,7 @@ public class MainPanel extends JFrame implements ActionListener {
         mainPanel = new JPanel(null);
         mainPanel.add(sendButton);
         mainPanel.add(pictureButton);
-        mainPanel.add(chattWindow);
+        mainPanel.add(chatWindow);
         mainPanel.add(textWindow);
         mainPanel.add(profilePic);
 
@@ -55,16 +60,25 @@ public class MainPanel extends JFrame implements ActionListener {
 
     }
 
-    private void setUp(){
+    private void setUp() {
 
     }
 
 
+    private void initiateChatWindow() {
+        chatWindow = new JPanel(new GridLayout(1, 1));
+        chatWindow.setSize(435, 300);
+        chatWindow.setLocation(10, 55);
+        chatWindow.setBackground(Color.BLACK);
+        chatWindow.setBorder(BorderFactory.createTitledBorder("Chat with " + contactName));
+        chatWindow.add(messageList);
+
+    }
 
     private void initiateButtons() {
         sendButton = new JButton();
-        sendButton.setSize(80,50);
-        sendButton.setLocation(360,430);
+        sendButton.setSize(80, 50);
+        sendButton.setLocation(360, 430);
         sendButton.setText("Send");
         sendButton.addActionListener(this);
 
@@ -72,6 +86,12 @@ public class MainPanel extends JFrame implements ActionListener {
         pictureButton.setSize(80, 50);
         pictureButton.setLocation(360, 480);
         pictureButton.addActionListener(this);
+    }
+
+    private void initiateList() {
+        messageList = new JList(dlm);
+        messageList.setBackground(Color.GREEN);
+
     }
 
     public String getUsername() {
@@ -90,13 +110,6 @@ public class MainPanel extends JFrame implements ActionListener {
         this.textWindow = textWindow;
     }
 
-    public Chattwindow getChattWindow() {
-        return chattWindow;
-    }
-
-    public void setChattWindow(Chattwindow chattWindow) {
-        this.chattWindow = chattWindow;
-    }
 
     public void chooseFile() {
         fileChooser = new JFileChooser();
@@ -118,16 +131,24 @@ public class MainPanel extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == sendButton) {
+        if (e.getSource() == sendButton) {
             if (file == null) {
                 controller.sendMessage(textWindow.getText());
-            }
-            else {
+            } else {
                 controller.sendMessage(textWindow.getText(), file.getAbsolutePath());
             }
         }
         if (e.getSource() == pictureButton) {
             chooseFile();
+        }
+    }
+
+    public void addMessage(Object obj) {
+        if (obj instanceof Icon) {
+            dlm.addElement(obj);
+        }
+        if (obj instanceof String) {
+            dlm.addElement(obj);
         }
     }
 }
