@@ -64,6 +64,8 @@ public class Controller {
         setProfile();
     }
     public void sendMessage(String message) {
+        TextMessage m = new TextMessage(message);
+        
 
     }
     public void sendMessage(String message, String path) {
