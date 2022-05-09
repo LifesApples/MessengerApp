@@ -59,8 +59,8 @@ public class Controller {
         mainFrame.setProfileGUI(myUser.getUsername(), myUser.getIcon() );
     }
 
-    public void openChatWindow() {
-        mainFrame.openChatwindow(myUser.getUsername(), "TESTUSER");
+    public void openChatWindow(String contact) {
+        mainFrame.openChatwindow(myUser.getUsername(), contact);
         setProfile();
     }
     public void sendMessage(String message) {

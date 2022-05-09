@@ -125,7 +125,8 @@ public class ContactPanel extends JPanel implements ActionListener {
                 if (e.getClickCount() == 2) {
                       index = onlineUsers.getMaxSelectionIndex();
                     if (index > -1) {
-                        controller.openChatWindow();
+                        controller.openChatWindow(onlineUsers.getSelectedValue().toString());
+                        System.out.println(onlineUsers.getSelectedValue().toString());
                     }
                 }
 
@@ -158,7 +159,7 @@ public class ContactPanel extends JPanel implements ActionListener {
                 if (e.getClickCount() == 2) {
                     int index = myContacts.getMaxSelectionIndex();
                     if (index > -1) {
-                        controller.openChatWindow();
+                        controller.openChatWindow(myContacts.getSelectedValue().toString());
                     }
                 }
             }
