@@ -114,10 +114,10 @@ public class Controller {
         setUpContactsGUI();
     }
     public void removeContact(String username) {
-
         for (int i = 0; i < client.getContacts().getContactlist().size(); i++) {
             if (client.getContacts().getContactlist().get(i).getUsername().equals(username)) {
-                client.getContacts().getContactlist().remove(i);
+                client.getContacts().removeContact(client.getContacts().getContactlist().get(i));
+
             }
         }
 

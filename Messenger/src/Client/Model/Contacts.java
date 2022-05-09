@@ -87,7 +87,6 @@ public class Contacts {
             }
         }
         if (userToRemove != null) {
-            //contactlist.remove(userToRemove);
             try {
                 contactlist.remove(userToRemove);
                 writeContactfile();
