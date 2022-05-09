@@ -32,12 +32,11 @@ public class Client {
         try {
             System.out.println("Connecting");
             socket = new Socket(ip, port);
-
+            user.setStatus(1);
             oos = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             oos.writeObject(user);
-            user.setStatus(1);
+
             oos.flush();
-          //  user.setStatus(1);
             ois = new ObjectInputStream(new BufferedInputStream (socket.getInputStream()));
 
 
@@ -58,6 +57,11 @@ public class Client {
     public void disconnect() {
         while (user.getStatus() == 1) {
             user.setStatus(0);
+            try {
+                oos.writeObject(user);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             disconnect();
         }
     }
