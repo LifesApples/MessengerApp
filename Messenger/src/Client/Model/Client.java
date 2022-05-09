@@ -100,6 +100,12 @@ public class Client {
                     Object object = ois.readObject();
 
                     if (object instanceof User) {
+
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         addOnlineUser((User) object);
                     }
 
