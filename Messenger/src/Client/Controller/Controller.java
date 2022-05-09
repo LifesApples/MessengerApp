@@ -65,7 +65,7 @@ public class Controller {
     }
     public void sendMessage(String message) {
         TextMessage m = new TextMessage(message);
-        
+
 
     }
     public void sendMessage(String message, String path) {
