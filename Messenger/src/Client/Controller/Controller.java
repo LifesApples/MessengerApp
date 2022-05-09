@@ -107,7 +107,7 @@ public class Controller {
 
 
 
-    public void disconnectClients () {
+    public void disconnectClient() {
         client.disconnect();
     }
 

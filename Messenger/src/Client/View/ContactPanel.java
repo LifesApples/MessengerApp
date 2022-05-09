@@ -3,8 +3,6 @@ package Client.View;
 import Client.Controller.Controller;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +16,7 @@ public class ContactPanel extends JPanel implements ActionListener {
     private JScrollPane o, m;
     private int height;
     private int width;
-    private JButton btnAddContact, btnRemoveContact;
+    private JButton btnAddContact, btnRemoveContact, btnDisconnect;
     private String userMarked;
 
 
@@ -41,6 +39,8 @@ public class ContactPanel extends JPanel implements ActionListener {
         btnAddContact.addActionListener(this);
         btnRemoveContact = new JButton("Remove Contact");
         btnRemoveContact.addActionListener(this);
+        btnDisconnect = new JButton("Disconnect");
+        btnDisconnect.addActionListener(this);
 
     }
 
@@ -69,9 +69,10 @@ public class ContactPanel extends JPanel implements ActionListener {
         listPanel.add(o);
         listPanel.setBounds(0, 0, width - 40, height - 40);
 
-        buttonPanel = new JPanel(new GridLayout(1,2));
+        buttonPanel = new JPanel(new GridLayout(1,3));
         buttonPanel.add(btnAddContact);
         buttonPanel.add(btnRemoveContact);
+        buttonPanel.add(btnDisconnect);
         buttonPanel.setBounds(20, height-150, 300, 50);
 
         mainPanel = new JPanel(null);
@@ -113,6 +114,9 @@ public class ContactPanel extends JPanel implements ActionListener {
         }
         if (e.getSource() == btnRemoveContact) {
             controller.removeContact(myContacts.getSelectedValue().toString());
+        }
+        if (e.getSource() == btnDisconnect) {
+            controller.disconnectClient();
         }
 
     }
