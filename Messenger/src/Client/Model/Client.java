@@ -35,8 +35,9 @@ public class Client {
 
             oos = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             oos.writeObject(user);
+            oos.flush();
           //  user.setStatus(1);
-         //   ois = new ObjectInputStream(new BufferedInputStream (socket.getInputStream()));
+            ois = new ObjectInputStream(new BufferedInputStream (socket.getInputStream()));
 
 
         } catch (IOException e) {
@@ -50,6 +51,7 @@ public class Client {
 
     public void sendMessage(TextMessage message) throws IOException {
         oos.writeObject(message);
+        oos.flush();
     }
 
     public void disconnect() {
@@ -103,6 +105,7 @@ public class Client {
 
                     if (object instanceof TextMessage) {
                        controller.appendTextMessageGUI(object);
+                        System.out.println("Text message recieved!");
                     }
 
                     if (object instanceof String) {

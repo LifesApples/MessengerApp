@@ -76,6 +76,7 @@ public class Server {
                 String message, response;
                 this.socket = socket;
                 ois = new ObjectInputStream(socket.getInputStream());
+                oos = new ObjectOutputStream(socket.getOutputStream());
                 u1 = new User("Sam");
                 u2 = new User("Azam");
                 u3 = new User("Per");
@@ -114,11 +115,13 @@ public class Server {
 
                     try {
                         object = ois.readObject();
+                        System.out.println("Objecy clss: " + object.getClass());
                         if(object instanceof User) {
                             User user = (User) object;
                             System.out.println("User tried logging in");
                             userlist.put(user,user.getUsername());
-                            log.add("User" + user.getUsername() + " logged in");
+                            log.add("User: " + user.getUsername() + " logged in");
+                            System.out.println("Online users: " + log.get(0));
                             //userlist.put(u1,user.getUsername());
                             //userlist.put(u2,user.getUsername());
                             //userlist.put(u3,user.getUsername());
@@ -126,12 +129,15 @@ public class Server {
                         }
                         else if(object instanceof TextMessage){
                             TextMessage message = (TextMessage) object;
-                            //System.out.println("TextMessage found: " + message.getMessage());
-                            //System.out.println("Sent by: " + message.getSender());
-                            //System.out.println("Sent to: " + message.getRecievers());
+                            System.out.println("TextMessage found: " + message.getMessage());
+                            System.out.println("Sent by: " + message.getSender().getUsername());
+                            System.out.println("Sent to: " + message.getRecievers());
                             sendMessageToRecievers(message.getRecievers());
                             log.add("User: " + message.getSender() + " Sent: " + message.getMessage() +
                                      " to: " + message.getSender());
+
+                            //oos.writeObject(message);
+                            //oos.flush();
 
                         }
 

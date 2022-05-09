@@ -23,7 +23,7 @@ public class Controller {
 
     public Controller() throws IOException {
 
-        server = new Server(2343);
+        //server = new Server(2343);
         lp = new LoginPage(this);
 
     }
@@ -65,6 +65,11 @@ public class Controller {
     }
     public void sendMessage(String message) {
         TextMessage m = new TextMessage(message, myUser);
+        try {
+            client.sendMessage(m);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         mainFrame.appendTextMessageGUI(m.getSender().getUsername()+ ":");
         mainFrame.appendTextMessageGUI(m.getMessage());
 
