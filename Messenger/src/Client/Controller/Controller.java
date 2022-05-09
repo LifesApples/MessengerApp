@@ -66,25 +66,37 @@ public class Controller {
         mainFrame.openChatwindow(myUser.getUsername(), contact);
         setProfile();
     }
-    public void sendMessage(String message) {
+    public void sendMessage(String message, String contactName) {
         TextMessage m = new TextMessage(message, myUser);
+        for (User u : client.getOnlineUsers())
+            if (u.getUsername().equals(contactName)) {
+                m.addReciever(u);
+            }
+
+        mainFrame.appendTextMessageGUI(m.getSender().getUsername()+ ":");
+        mainFrame.appendTextMessageGUI(m.getMessage());
         try {
             client.sendMessage(m);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mainFrame.appendTextMessageGUI(m.getSender().getUsername()+ ":");
-        mainFrame.appendTextMessageGUI(m.getMessage());
-
 
     }
-    public void sendMessage(String message, String path) {
+    public void sendMessage(String message, String path, String contactName) {
         TextMessage m = new TextMessage(message, new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(30,30, Image.SCALE_DEFAULT)), myUser);
+        for (User u : client.getOnlineUsers())
+            if (u.getUsername().equals(contactName)) {
+                m.addReciever(u);
+            }
 
         mainFrame.appendTextMessageGUI(m.getSender().getUsername() + ":");
         mainFrame.appendTextMessageGUI(m.getIcon());
         mainFrame.appendTextMessageGUI(m.getMessage());
-
+        try {
+            client.sendMessage(m);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -112,7 +124,6 @@ public class Controller {
     }
 
     public void addContact(String username) {
-        client.addOnlineUser(new User("test1"));
         for (User u : client.getOnlineUsers()) {
             if (u.getUsername().equals(username)) {
                 client.addContact(u);
@@ -134,10 +145,11 @@ public class Controller {
 
     public void appendTextMessageGUI(Object obj) {
         if (obj instanceof TextMessage) {
+            System.out.println("Message Recieved");
             mainFrame.appendTextMessageGUI(((TextMessage) obj).getIcon());
             mainFrame.appendTextMessageGUI(((TextMessage) obj).getMessage());
             mainFrame.appendTextMessageGUI(((TextMessage) obj).getSender().getUsername());
-            mainFrame.appendTextMessageGUI(((TextMessage) obj).getTimeSent());
+            //mainFrame.appendTextMessageGUI(((TextMessage) obj).getTimeSent());
         }
 
     }

@@ -36,7 +36,7 @@ public class MainPanel extends JFrame implements ActionListener {
         initiateList();
         initiateButtons();
         initiateChatWindow();
-       // chattWindow = new Chattwindow(controller, contactName);
+
 
         textWindow = new TextWindow(width, height, controller, username);
 
@@ -132,10 +132,10 @@ public class MainPanel extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == sendButton) {
             if (file == null) {
-                controller.sendMessage(textWindow.getText());
+                controller.sendMessage(textWindow.getText(), contactName);
                 textWindow.setText(null);
             } else {
-                controller.sendMessage(textWindow.getText(), file.getAbsolutePath());
+                controller.sendMessage(textWindow.getText(), file.getAbsolutePath(), contactName);
                 textWindow.setText(null);
                 file = null;
             }

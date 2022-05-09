@@ -30,7 +30,7 @@ public class ContactPanel extends JPanel implements ActionListener {
         initiateLists();
         initiateButtons();
         initiatePanels();
-        updateOnlineUsers(new String[]{"test1", "test2"});
+        updateOnlineUsers(new String[100]);
 
 
     }
