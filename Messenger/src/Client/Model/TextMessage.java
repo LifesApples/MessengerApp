@@ -16,14 +16,16 @@ public class TextMessage implements Serializable {
 
 
 
-    public TextMessage (String message, Icon icon) {
+    public TextMessage (String message, Icon icon, User sender) {
         this.message = message;
         this.icon = icon;
+        this.sender = sender;
 
 
     }
-    public TextMessage (String message) {
+    public TextMessage (String message, User sender) {
         this.message = message;
+        this.sender = sender;
 
     }
 

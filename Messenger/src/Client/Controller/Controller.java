@@ -2,6 +2,7 @@ package Client.Controller;
 
 import Client.Model.Client;
 import Client.Model.Contacts;
+import Client.Model.TextMessage;
 import Server.Model.Server;
 import Client.Model.User;
 import Client.View.LoginPage;
@@ -50,6 +51,7 @@ public class Controller {
         for (int i = 0; i < onlineUsers.length; i++) {
             onlineUsers[i] = users.get(i).getUsername();
         }
+        mainFrame.setOnlineUsers(onlineUsers);
     }
 
 
@@ -57,13 +59,27 @@ public class Controller {
         mainFrame.setProfileGUI(myUser.getUsername(), myUser.getIcon() );
     }
 
-    public void openChatWindow() {
-        mainFrame.openChatwindow(myUser.getUsername(), "TESTUSER");
+    public void openChatWindow(String contact) {
+        mainFrame.openChatwindow(myUser.getUsername(), contact);
         setProfile();
     }
-    public void sendMessage(String message, String username) {
-        System.out.println(username + " said: " + message);
+    public void sendMessage(String message) {
+        TextMessage m = new TextMessage(message, myUser);
+        mainFrame.appendTextMessageGUI(m.getSender().getUsername()+ ":");
+        mainFrame.appendTextMessageGUI(m.getMessage());
+
+
     }
+    public void sendMessage(String message, String path) {
+        TextMessage m = new TextMessage(message, new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(30,30, Image.SCALE_DEFAULT)), myUser);
+
+        mainFrame.appendTextMessageGUI(m.getSender().getUsername() + ":");
+        mainFrame.appendTextMessageGUI(m.getIcon());
+        mainFrame.appendTextMessageGUI(m.getMessage());
+
+
+    }
+
 
     public void sendGUIerror(String str) {
        // mainFrame.sendErrormessage(str);
@@ -79,6 +95,7 @@ public class Controller {
 
     public void setMyUser(String username, String path) {
         myUser = new User(username, new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(100,100, Image.SCALE_DEFAULT)));
+
 
     }
     public void setMyUser(String username) {
@@ -97,15 +114,25 @@ public class Controller {
         setUpContactsGUI();
     }
     public void removeContact(String username) {
-        for (User u : client.getContacts().getContactlist()) {
-            System.out.println(u.getUsername());
-            if (u.getUsername().equals(username)) {
-                client.removeContact(u);
+        for (int i = 0; i < client.getContacts().getContactlist().size(); i++) {
+            if (client.getContacts().getContactlist().get(i).getUsername().equals(username)) {
+                client.getContacts().removeContact(client.getContacts().getContactlist().get(i));
+
             }
         }
+
         setUpContactsGUI();
     }
 
+    public void appendTextMessageGUI(Object obj) {
+        if (obj instanceof TextMessage) {
+            mainFrame.appendTextMessageGUI(((TextMessage) obj).getIcon());
+            mainFrame.appendTextMessageGUI(((TextMessage) obj).getMessage());
+            mainFrame.appendTextMessageGUI(((TextMessage) obj).getSender().getUsername());
+            mainFrame.appendTextMessageGUI(((TextMessage) obj).getTimeSent());
+        }
+
+    }
 
 
 }

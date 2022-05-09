@@ -88,12 +88,12 @@ public class LoginPage extends JFrame {
             if(e.getSource() == btnLogin){
                 System.out.println("Login was pressed");
                 if (file == null) {
-                    controller.setMyUser(getUsername().toString());
+                    controller.setMyUser(getUsername().getText());
                     controller.signIn();
                     dispose();
                 }
                 else {
-                    controller.setMyUser(getUsername().toString(), file.getAbsolutePath());
+                    controller.setMyUser(getUsername().getText(), file.getAbsolutePath());
                     controller.signIn();
                     dispose();
                 }

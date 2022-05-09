@@ -7,9 +7,9 @@ import java.util.ArrayList;
 
 public class Contacts {
 
+    private final String filename = "contacts";
     private ArrayList<User> contactlist;
     private File contactfile;
-    private final String filename = "contacts";
 
     public Contacts() {
         contactlist = new ArrayList<>();
@@ -33,14 +33,13 @@ public class Contacts {
         }
     }
 
-    public void readContactfile()  throws IOException, ClassNotFoundException{
+    public void readContactfile() throws IOException, ClassNotFoundException {
         try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(contactfile)))) {
-                int n = ois.readInt();
-                for (int i = 0; i < n; i++) {
-                    contactlist.add((User) ois.readObject());
+            int n = ois.readInt();
+            for (int i = 0; i < n; i++) {
+                contactlist.add((User) ois.readObject());
             }
-        }
-        catch (EOFException e) {
+        } catch (EOFException e) {
 
         }
 
@@ -64,7 +63,7 @@ public class Contacts {
         this.contactlist = contactlist;
     }
 
-    public void addContact(User user ) {
+    public void addContact(User user) {
         Boolean exist = false;
         for (User u : contactlist) {
             if (u.getUsername().equals(user.getUsername())) {
@@ -81,20 +80,23 @@ public class Contacts {
     }
 
     public void removeContact(User user) {
-        for (User u: contactlist) {
+        User userToRemove = null;
+        for (User u : contactlist) {
             if (u.getUsername().equals(user.getUsername())) {
-                contactlist.remove(u);
-                try {
-                    System.out.println(contactlist.size());
-                    writeContactfile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+                userToRemove = u;
             }
         }
-
+        if (userToRemove != null) {
+            try {
+                contactlist.remove(userToRemove);
+                writeContactfile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
+
+}
 
 
 
