@@ -119,7 +119,9 @@ public class Server {
                         if(object instanceof User) {
                             User user = (User) object;
                             System.out.println("User tried logging in");
+                            oos.writeObject(userlist);
                             userlist.put(user,user.getUsername());
+                            sendLoggedUsers();
                             log.add("User: " + user.getUsername() + " logged in");
                             System.out.println("Online users: " + log.get(0));
                             //userlist.put(u1,user.getUsername());
@@ -135,9 +137,6 @@ public class Server {
                             sendMessageToRecievers(message.getRecievers());
                             log.add("User: " + message.getSender() + " Sent: " + message.getMessage() +
                                      " to: " + message.getSender());
-
-                            //oos.writeObject(message);
-                            //oos.flush();
 
                         }
 
@@ -155,8 +154,21 @@ public class Server {
                 public void logTraffick(){
                 //Print traffick to file for every new activity
                 }
+
+                public void sendLoggedUsers(){
+                    for (var user1 : userlist.keySet()){
+                        User user = (User) user1;
+                        try {
+                            oos.writeObject(user);
+                            oos.flush();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        System.out.println("Sending to " + user.getUsername());
+                }
             }
         }
+}
 }
 
 
