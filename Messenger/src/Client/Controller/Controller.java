@@ -65,14 +65,15 @@ public class Controller {
     }
     public void sendMessage(String message) {
         TextMessage m = new TextMessage(message);
+        mainFrame.appendTextMessageGUI(m.getMessage());
 
 
     }
     public void sendMessage(String message, String path) {
         TextMessage m = new TextMessage(message, new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(30,30, Image.SCALE_DEFAULT)));
 
-        mainFrame.appendTextMessageGUI(((TextMessage) m).getIcon());
-        mainFrame.appendTextMessageGUI(((TextMessage) m).getMessage());
+        mainFrame.appendTextMessageGUI(m.getIcon());
+        mainFrame.appendTextMessageGUI(m.getMessage());
 
     }
 

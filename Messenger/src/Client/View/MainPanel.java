@@ -14,17 +14,17 @@ import static javax.print.attribute.standard.Chromaticity.COLOR;
 public class MainPanel extends JFrame implements ActionListener {
 
     private JPanel mainPanel, chatWindow;
-    private String contactName, username;
+    private String contactName, username, str;
     private Controller controller;
     private Chattwindow chattWindow;
     private TextWindow textWindow;
     private JLabel profilePic;
     private JButton sendButton, contactList, pictureButton;
-    private ImageIcon icon;
     private JFileChooser fileChooser;
     private File file;
     private JList messageList;
     private DefaultListModel dlm = new DefaultListModel();
+    private Icon icon;
 
 
     public MainPanel(int width, int height, Controller controller, String contactName, String username) {
@@ -36,7 +36,7 @@ public class MainPanel extends JFrame implements ActionListener {
         initiateList();
         initiateButtons();
         initiateChatWindow();
-        chattWindow = new Chattwindow(controller, contactName);
+       // chattWindow = new Chattwindow(controller, contactName);
 
         textWindow = new TextWindow(width, height, controller, username);
 
@@ -134,8 +134,11 @@ public class MainPanel extends JFrame implements ActionListener {
         if (e.getSource() == sendButton) {
             if (file == null) {
                 controller.sendMessage(textWindow.getText());
+                textWindow.setText(null);
             } else {
                 controller.sendMessage(textWindow.getText(), file.getAbsolutePath());
+                textWindow.setText(null);
+                file = null;
             }
         }
         if (e.getSource() == pictureButton) {
@@ -143,12 +146,16 @@ public class MainPanel extends JFrame implements ActionListener {
         }
     }
 
+
+
     public void addMessage(Object obj) {
+
         if (obj instanceof Icon) {
             dlm.addElement(obj);
         }
         if (obj instanceof String) {
             dlm.addElement(obj);
         }
+
     }
 }
