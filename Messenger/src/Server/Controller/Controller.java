@@ -1,18 +1,12 @@
 package Server.Controller;
 
-import Client.Model.Client;
-import Client.Model.User;
-import Client.View.LoginPage;
-import Client.View.MainFrame;
+
 import Server.Model.Server;
 
 import java.io.IOException;
 
 public class Controller {
-    private MainFrame mainFrame;
-    private LoginPage lp;
     private Server server;
-    private Client client;
 
 
     public Controller() throws IOException {
