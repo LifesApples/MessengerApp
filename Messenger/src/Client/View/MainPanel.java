@@ -149,13 +149,13 @@ public class MainPanel extends JFrame implements ActionListener {
 
 
     public void addMessage(Object obj) {
-
-        if (obj instanceof Icon) {
-            dlm.addElement(obj);
-        }
         if (obj instanceof String) {
             dlm.addElement(obj);
         }
+        if (obj instanceof Icon) {
+            dlm.addElement(obj);
+        }
+
 
     }
 }

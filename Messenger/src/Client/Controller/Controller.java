@@ -64,16 +64,19 @@ public class Controller {
         setProfile();
     }
     public void sendMessage(String message) {
-        TextMessage m = new TextMessage(message);
+        TextMessage m = new TextMessage(message, myUser);
+        mainFrame.appendTextMessageGUI(m.getSender().getUsername()+ ":");
         mainFrame.appendTextMessageGUI(m.getMessage());
 
 
     }
     public void sendMessage(String message, String path) {
-        TextMessage m = new TextMessage(message, new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(30,30, Image.SCALE_DEFAULT)));
+        TextMessage m = new TextMessage(message, new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(30,30, Image.SCALE_DEFAULT)), myUser);
 
+        mainFrame.appendTextMessageGUI(m.getSender().getUsername() + ":");
         mainFrame.appendTextMessageGUI(m.getIcon());
         mainFrame.appendTextMessageGUI(m.getMessage());
+
 
     }
 
