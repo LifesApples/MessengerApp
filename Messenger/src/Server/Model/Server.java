@@ -133,7 +133,12 @@ public class Server {
                             TextMessage message = (TextMessage) object;
                             System.out.println("TextMessage found: " + message.getMessage());
                             System.out.println("Sent by: " + message.getSender().getUsername());
-                            System.out.println("Sent to: " + message.getRecievers());
+                            
+                            for(int i = 0; i<message.getRecievers().size(); i++){
+                                User singleReciever = message.getRecievers().get(i);
+                                System.out.println(singleReciever.getUsername());
+                                System.out.println("Sent to: " + message.getRecievers());
+                            }
                             sendMessageToRecievers(message.getRecievers());
                             log.add("User: " + message.getSender() + " Sent: " + message.getMessage() +
                                      " to: " + message.getSender());
