@@ -120,7 +120,6 @@ public class MainPanel extends JFrame implements ActionListener {
         int returnValue = fileChooser.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             file = fileChooser.getSelectedFile();
-            System.out.println(file.getAbsolutePath());
 
         }
     }
