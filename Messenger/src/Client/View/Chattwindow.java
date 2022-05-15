@@ -5,24 +5,25 @@ import Client.Model.TextMessage;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Chattwindow extends JPanel {
     private Controller controller;
     private String contactName;
     private DefaultListModel<Object> messageList = new DefaultListModel<>();
+    private ArrayList<String> recievers = new ArrayList<>();
 
-    public Chattwindow(Controller controller, String contactName) {
+    public Chattwindow(Controller controller, ArrayList<String> recievers) {
         super(null);
-        this.contactName = contactName;
+        this.recievers = recievers;
         this.controller = controller;
         setSize(435, 300);
         setLocation(10, 55);
         setBackground(Color.white);
-        setBorder(BorderFactory.createTitledBorder("Chat with " + contactName));
+        setBorder(BorderFactory.createTitledBorder("Chat with " + recievers.size()));
 
 
     }
-
 
 
     public DefaultListModel<Object> getMessageList() {

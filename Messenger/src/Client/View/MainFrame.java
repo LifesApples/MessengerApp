@@ -41,8 +41,10 @@ public class MainFrame extends JFrame {
         mainPanel.setUsername(name);
     }
 
-    public void openChatwindow(String username, String contactName) {
-        mainPanel = new MainPanel(width, height, controller, contactName, username);
+
+
+    public void openChatwindow(String username, ArrayList recievers) {
+        mainPanel = new MainPanel(width, height, controller, recievers, username);
     }
 
     public void setContacts(String[] contacts) {
