@@ -3,13 +3,12 @@ package Client.View;
 import Client.Controller.Controller;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 public class ContactPanel extends JPanel implements ActionListener {
     private Controller controller;
@@ -18,8 +17,9 @@ public class ContactPanel extends JPanel implements ActionListener {
     private JScrollPane o, m;
     private int height;
     private int width;
-    private JButton btnAddContact, btnRemoveContact;
+    private JButton btnAddContact, btnRemoveContact, btnDisconnect, btnMessageAll, btnAddToMessage;
     private String userMarked;
+    private ArrayList<String> recieverList = new ArrayList<>();
 
 
     public ContactPanel(int width, int height, Controller controller) {
@@ -41,6 +41,12 @@ public class ContactPanel extends JPanel implements ActionListener {
         btnAddContact.addActionListener(this);
         btnRemoveContact = new JButton("Remove Contact");
         btnRemoveContact.addActionListener(this);
+        btnDisconnect = new JButton("Disconnect");
+        btnDisconnect.addActionListener(this);
+        btnMessageAll = new JButton("Message All");
+        btnMessageAll.addActionListener(this);
+        btnAddToMessage = new JButton("Add to message");
+        btnAddToMessage.addActionListener(this);
 
     }
 
@@ -69,9 +75,12 @@ public class ContactPanel extends JPanel implements ActionListener {
         listPanel.add(o);
         listPanel.setBounds(0, 0, width - 40, height - 40);
 
-        buttonPanel = new JPanel(new GridLayout(1,2));
+        buttonPanel = new JPanel(new GridLayout(2,3));
         buttonPanel.add(btnAddContact);
         buttonPanel.add(btnRemoveContact);
+        buttonPanel.add(btnDisconnect);
+        buttonPanel.add(btnAddToMessage);
+        buttonPanel.add(btnMessageAll);
         buttonPanel.setBounds(20, height-150, 300, 50);
 
         mainPanel = new JPanel(null);
@@ -106,6 +115,10 @@ public class ContactPanel extends JPanel implements ActionListener {
         myContacts.setListData(list);
     }
 
+    public JList getOnlineUsers() {
+        return onlineUsers;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnAddContact) {
@@ -113,6 +126,20 @@ public class ContactPanel extends JPanel implements ActionListener {
         }
         if (e.getSource() == btnRemoveContact) {
             controller.removeContact(myContacts.getSelectedValue().toString());
+        }
+        if (e.getSource() == btnDisconnect) {
+            controller.disconnectClient();
+        }
+        if (e.getSource() == btnMessageAll) {
+          controller.openChatWindow(recieverList);
+        }
+        if (e.getSource() == btnAddToMessage) {
+            if (getOnlineUsersIndex() > -1) {
+                recieverList.add(onlineUsers.getSelectedValue().toString());
+            }
+            if (getMyContactsIndex() > -1) {
+                recieverList.add(myContacts.getSelectedValue().toString());
+            }
         }
 
     }
@@ -124,9 +151,11 @@ public class ContactPanel extends JPanel implements ActionListener {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
                       index = onlineUsers.getMaxSelectionIndex();
+                      recieverList.clear();
                     if (index > -1) {
-                        controller.openChatWindow(onlineUsers.getSelectedValue().toString());
-                        System.out.println(onlineUsers.getSelectedValue().toString());
+                        recieverList.add(onlineUsers.getSelectedValue().toString());
+                        controller.openChatWindow(recieverList);
+
                     }
                 }
 
@@ -158,8 +187,10 @@ public class ContactPanel extends JPanel implements ActionListener {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
                     int index = myContacts.getMaxSelectionIndex();
+                    recieverList.clear();
                     if (index > -1) {
-                        controller.openChatWindow(myContacts.getSelectedValue().toString());
+                        recieverList.add(myContacts.getSelectedValue().toString());
+                        controller.openChatWindow(recieverList);
                     }
                 }
             }

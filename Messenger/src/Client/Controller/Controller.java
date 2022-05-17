@@ -11,6 +11,7 @@ import Client.View.MainFrame;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Controller {
@@ -62,15 +63,19 @@ public class Controller {
         mainFrame.setProfileGUI(myUser.getUsername(), myUser.getIcon() );
     }
 
-    public void openChatWindow(String contact) {
-        mainFrame.openChatwindow(myUser.getUsername(), contact);
+    public void openChatWindow(ArrayList<String> recievers) {
+        mainFrame.openChatwindow(myUser.getUsername(), recievers);
         setProfile();
     }
-    public void sendMessage(String message, String contactName) {
+
+
+    public void sendMessage(String message, ArrayList<String> recievers) {
         TextMessage m = new TextMessage(message, myUser);
         for (User u : client.getOnlineUsers())
-            if (u.getUsername().equals(contactName)) {
-                m.addReciever(u);
+            for (String r : recievers) {
+                if (u.getUsername().equals(r)) {
+                    m.addReciever(u);
+                }
             }
 
         mainFrame.appendTextMessageGUI(m.getSender().getUsername()+ ":");
@@ -82,11 +87,13 @@ public class Controller {
         }
 
     }
-    public void sendMessage(String message, String path, String contactName) {
+    public void sendMessage(String message, String path, ArrayList<String> recievers) {
         TextMessage m = new TextMessage(message, new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(30,30, Image.SCALE_DEFAULT)), myUser);
         for (User u : client.getOnlineUsers())
-            if (u.getUsername().equals(contactName)) {
-                m.addReciever(u);
+            for (String r : recievers) {
+                if (u.getUsername().equals(r)) {
+                    m.addReciever(u);
+                }
             }
 
         mainFrame.appendTextMessageGUI(m.getSender().getUsername() + ":");
@@ -101,13 +108,14 @@ public class Controller {
     }
 
 
+
     public void sendGUIerror(String str) {
        // mainFrame.sendErrormessage(str);
     }
 
 
 
-    public void disconnectClients () {
+    public void disconnectClient() {
         client.disconnect();
     }
 
@@ -153,6 +161,7 @@ public class Controller {
         }
 
     }
+
 
 
 }

@@ -8,13 +8,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import static javax.print.attribute.standard.Chromaticity.COLOR;
 
 public class MainPanel extends JFrame implements ActionListener {
 
     private JPanel mainPanel, chatWindow;
-    private String contactName, username, str;
+    private String contactName, username;
+    private ArrayList<String> recievers;
     private Controller controller;
     private Chattwindow chattWindow;
     private TextWindow textWindow;
@@ -27,11 +30,12 @@ public class MainPanel extends JFrame implements ActionListener {
     private Icon icon;
 
 
-    public MainPanel(int width, int height, Controller controller, String contactName, String username) {
+
+    public MainPanel(int width, int height, Controller controller, ArrayList recievers, String username) {
 
         this.controller = controller;
         this.username = username;
-        this.contactName = contactName;
+        this.recievers = recievers;
         setSize(width, height);
         initiateList();
         initiateButtons();
@@ -56,7 +60,6 @@ public class MainPanel extends JFrame implements ActionListener {
         setVisible(true);
         setContentPane(mainPanel);
         setBackground(Color.PINK);
-
 
     }
 
@@ -131,21 +134,21 @@ public class MainPanel extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == sendButton) {
-            if (file == null) {
-                controller.sendMessage(textWindow.getText(), contactName);
-                textWindow.setText(null);
-            } else {
-                controller.sendMessage(textWindow.getText(), file.getAbsolutePath(), contactName);
-                textWindow.setText(null);
-                file = null;
-            }
+                if (file == null) {
+                    controller.sendMessage(textWindow.getText(), recievers);
+                    textWindow.setText(null);
+                } else {
+                    controller.sendMessage(textWindow.getText(), file.getAbsolutePath(), recievers);
+                    textWindow.setText(null);
+                    file = null;
+                }
+
         }
         if (e.getSource() == pictureButton) {
             chooseFile();
         }
+
     }
-
-
 
     public void addMessage(Object obj) {
         if (obj instanceof String) {

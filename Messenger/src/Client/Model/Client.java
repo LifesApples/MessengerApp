@@ -32,11 +32,11 @@ public class Client {
         try {
             System.out.println("Connecting");
             socket = new Socket(ip, port);
-
+            user.setStatus(1);
             oos = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             oos.writeObject(user);
+
             oos.flush();
-          //  user.setStatus(1);
             ois = new ObjectInputStream(new BufferedInputStream (socket.getInputStream()));
 
 
@@ -55,9 +55,15 @@ public class Client {
     }
 
     public void disconnect() {
-        System.out.println("Disconnect");
-      //  user.setStatus(0);
-        disconnect();
+        while (user.getStatus() == 1) {
+            user.setStatus(0);
+            try {
+                oos.writeObject(user);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            disconnect();
+        }
     }
 
     public void addContact(User user) {
