@@ -70,19 +70,39 @@ public class Server {
 
         }
 
+        //Notifies handlers that a new user logged in and that they need to update their userlists via addOnlineUser()
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             System.out.println("PCE was fired to server");
             if(evt.getPropertyName().equals("New user")){
 
                 for(ClientHandler handler : handlers){
-                    System.out.println("Sending notice to handlers");
                     handler.addOnlineUser();
+                }
+            }
+            else if(evt.getPropertyName().equals("New message")){
+                TextMessage message = (TextMessage)evt.getNewValue();
+
+                System.out.println("Handler size: " + handlers.size());
+                System.out.println("reciever size: " + message.getRecievers().size());
+                for(int i = 0; i<handlers.size(); i++){
+                    for (int j = 0; j< message.getRecievers().size(); j++){
+                        System.out.println("Checking handler user: " + handlers.get(i).getUser().getUsername());
+                        System.out.println("Checking recipient: " + message.getRecievers().get(j).getUsername());
+                        if(handlers.get(i).getUser().getUsername().equals(message.getRecievers().get(j).getUsername())){
+                            System.out.println("Message: "+ message.getMessage() + " send to: " +
+                                    message.getRecievers().get(j).getUsername());
+                            handlers.get(i).sendMessage(message);
+                        }
+                        else {
+                            System.out.println(handlers.get(j).getUser() + " was not among recpients ");
+                        }
+                    }
                 }
             }
 
         }
-
+        //Each new client gets a Clienthandler instance
         private class ClientHandler extends Thread{
             private Socket socket;
             private ObjectOutputStream oos;
@@ -97,26 +117,27 @@ public class Server {
                 oos = new ObjectOutputStream(socket.getOutputStream());
             }
 
-            public void sendMessageToRecievers(ArrayList<User> recievers){
+            public void sendMessageToRecievers(TextMessage message, ArrayList<User> recievers){
 
-                System.out.println("Checking recieves: " + recievers.size());
+                System.out.println("Checking recievers: " + recievers.size());
                 //Loop through recievers
                 for (int i = 0; i<recievers.size(); i++){
                     //Loop through online users
-                    for (var entry : userlist.keySet()){
-                        if (recievers.get(i) == entry){
-                            User user = (User) entry;
-                            System.out.println("Sending to " + user.getUsername());
-                        }
-                        //User is offline if no match has been found in the userlist
-                        //TO do: Add message to offline messages for specifik users
-                        else {
-                            //System.out.println("Reciever(s) offline");
-                        }
+                    System.out.println("Userlist size: " + userlist.size());
+                    System.out.println("Testing user: " + recievers.get(i).getUsername());
+                    if (userlist.containsValue(recievers.get(i).getUsername())){
+                        System.out.println("Sending to " + recievers.get(i).getUsername());
+                        notifyServer.firePropertyChange("Sent message", null,message);
+                    }
+                    //User is offline if no match has been found in the userlist
+                    //TO do: Add message to offline messages for specifik users
+                    else {
+                        System.out.println("Reciever: "+recievers.get(i).getUsername() +" is offline");
+                    }
                     }
 
-                }
             }
+
 
 
             @Override
@@ -138,13 +159,13 @@ public class Server {
                             TextMessage message = (TextMessage) object;
                             System.out.println("TextMessage found: " + message.getMessage());
                             System.out.println("Sent by: " + message.getSender().getUsername());
-                            
+                            notifyServer.firePropertyChange("New message",null,message);
                             for(int i = 0; i<message.getRecievers().size(); i++){
                                 User singleReciever = message.getRecievers().get(i);
-                                System.out.println(singleReciever.getUsername());
-                                System.out.println("Sent to: " + message.getRecievers());
+                               // System.out.println(singleReciever.getUsername());
+                               // System.out.println("Sent to: " + singleReciever.getUsername());
                             }
-                            sendMessageToRecievers(message.getRecievers());
+                            sendMessageToRecievers(message ,message.getRecievers());
                             log.add("User: " + message.getSender() + " Sent: " + message.getMessage() +
                                      " to: " + message.getSender());
 
@@ -168,10 +189,8 @@ public class Server {
 
             public void addOnlineUser(){
                 for (var user1 : userlist.keySet()){
-                    Next User: aa
 
                 try {
-                    System.out.println("New user: " + ((User) user1).getUsername()+" is in list sending to stream." );
                     oos.writeObject(((User) user1));
                     oos.flush();
                 } catch (IOException e) {
@@ -185,7 +204,19 @@ public class Server {
                 notifyServer.addPropertyChangeListener(listener);
             }
 
+            public User getUser() {
+                return user;
+            }
 
+            public void sendMessage(TextMessage message){
+                try {
+                    oos.writeObject(message);
+                    oos.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
         }
 }
 }
