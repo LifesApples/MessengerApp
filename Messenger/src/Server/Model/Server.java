@@ -6,6 +6,7 @@ import Client.Model.User;
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -26,17 +27,18 @@ public class Server {
     }
 
 
-    private class Connect extends Thread {
+    private class Connect extends Thread implements PropertyChangeListener{
         private int port;
         private ServerSocket serverSocket;
-        //private ArrayList<ClientHandler> handlers;
+        private ArrayList<ClientHandler> handlers;
         private HashMap userlist;
         public Connect(int port) throws IOException {
             this.port = port;
             userlist = new HashMap();
-            //handlers = new ArrayList<>();
+            handlers = new ArrayList<>();
 
         }
+
 
         @Override
         public void run() {
@@ -47,7 +49,11 @@ public class Server {
                     System.out.println("Trying to connect");
                     socket = serverSocket.accept();
                     System.out.println("Connection established");
-                    new ClientHandler(socket);
+                    ClientHandler handler = new ClientHandler(socket);
+                    handler.start();
+                    handlers.add(handler);
+                    handler.registerListener(this);
+
                 }
 
             }catch(IOException e){
@@ -64,28 +70,34 @@ public class Server {
 
         }
 
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            System.out.println("PCE was fired to server");
+            if(evt.getPropertyName().equals("New user")){
+
+                for(ClientHandler handler : handlers){
+                    System.out.println("Sending notice to handlers");
+                    handler.addOnlineUser();
+                }
+            }
+
+        }
+
         private class ClientHandler extends Thread{
             private Socket socket;
             private ObjectOutputStream oos;
             private ObjectInputStream ois;
-            private User u1;
-            private User u2;
-            private User u3;
+            private User user = null;
+            private PropertyChangeSupport notifyServer = new PropertyChangeSupport(this);;
 
             public ClientHandler(Socket socket) throws IOException {
                 String message, response;
                 this.socket = socket;
                 ois = new ObjectInputStream(socket.getInputStream());
                 oos = new ObjectOutputStream(socket.getOutputStream());
-                u1 = new User("Sam");
-                u2 = new User("Azam");
-                u3 = new User("Per");
-                start();
             }
 
             public void sendMessageToRecievers(ArrayList<User> recievers){
-                recievers.add(u1);
-                recievers.add(u2);
 
                 System.out.println("Checking recieves: " + recievers.size());
                 //Loop through recievers
@@ -115,19 +127,12 @@ public class Server {
 
                     try {
                         object = ois.readObject();
-                        System.out.println("Objecy clss: " + object.getClass());
                         if(object instanceof User) {
-                            User user = (User) object;
-                            System.out.println("User tried logging in");
-                            oos.writeObject(userlist);
+                            user = (User) object;
                             userlist.put(user,user.getUsername());
-                            sendLoggedUsers();
+                            notifyServer.firePropertyChange("New user",null,user);
                             log.add("User: " + user.getUsername() + " logged in");
-                            System.out.println("Online users: " + log.get(0));
-                            //userlist.put(u1,user.getUsername());
-                            //userlist.put(u2,user.getUsername());
-                            //userlist.put(u3,user.getUsername());
-                            //System.out.println("Active users: " + userlist.values());
+
                         }
                         else if(object instanceof TextMessage){
                             TextMessage message = (TextMessage) object;
@@ -160,18 +165,27 @@ public class Server {
                 //Print traffick to file for every new activity
                 }
 
-                public void sendLoggedUsers(){
-                    for (var user1 : userlist.keySet()){
-                        User user = (User) user1;
-                        try {
-                            oos.writeObject(user);
-                            oos.flush();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        System.out.println("Sending to " + user.getUsername());
-                }
+
+            public void addOnlineUser(){
+                for (var user1 : userlist.keySet()){
+                    Next User: aa
+
+                try {
+                    System.out.println("New user: " + ((User) user1).getUsername()+" is in list sending to stream." );
+                    oos.writeObject(((User) user1));
+                    oos.flush();
+                } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                   }
+
             }
+            public void  registerListener(PropertyChangeListener listener)
+            {
+                notifyServer.addPropertyChangeListener(listener);
+            }
+
+
         }
 }
 }

@@ -86,7 +86,10 @@ public class Client {
 
 
     public void addOnlineUser(User user) {
-        onlineUsers.add(user);
+        if(!onlineUsers.contains(user)){
+            onlineUsers.add(user);
+        }
+
         controller.setUpOnlineUsersGUI(onlineUsers);
     }
 
