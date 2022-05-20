@@ -92,14 +92,12 @@ public class Controller {
     }
     public void sendMessage(String message, String path, ArrayList<String> recievers) {
         TextMessage m = new TextMessage(message, new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(30,30, Image.SCALE_DEFAULT)), myUser);
-        System.out.println("letar reciever response");
         for (User u : client.getOnlineUsers()) {
-            System.out.println("Online Users " + u.getUsername());
             for (String r : recievers) {
                 System.out.println(r);
                 if (u.getUsername().equals(r)) {
                     m.addReciever(u);
-                    System.out.println("reciever hittad");
+
                 }
             }
         }
