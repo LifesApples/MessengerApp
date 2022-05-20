@@ -85,4 +85,12 @@ public class TextMessage implements Serializable {
         this.timeRecieved = timeRecieved;
     }
 
+    @Override
+    public String toString() {
+        String text = timeSent +  '\''  +
+                " Sender: " + sender + " Message: " + message +
+                " Reciever: " + getRecievers().toString();
+
+        return text;
+    }
 }

@@ -2,6 +2,7 @@ package Server.Model;
 
 import Client.Model.TextMessage;
 import Client.Model.User;
+import Server.Controller.Controller;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -9,21 +10,50 @@ import java.beans.PropertyChangeSupport;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 //Textmessage som en textmessagee-object och user som en string
 //Tidsstämpel sköts här
 public class Server {
 
     private int port;
-    private ArrayList<String> log;
+    private ArrayList<LogEntry> log;
+    private ArrayList<LogEntry> searchResults;
+    private Controller controller;
 
-    public Server(int port) throws IOException {
+    public Server(int port, Controller controller) throws IOException {
         this.port = port;
+        this.controller = controller;
         log = new ArrayList<>();
+        searchResults = new ArrayList<>();
         new Connect(port).start();
+    }
+
+    public void searchDates(String from, String to){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
+        Date date = new Date();
+        try {
+            Date after = formatter.parse(from);
+            Date before = formatter.parse(to);
+
+            for(int i = 0; i<log.size();i++){
+                LogEntry logentry = log.get(i);
+                //Om detta datumet är efter/före detta datumet men före detta & detta datumet är efter...s
+                if(after.before(logentry.getDate()) < after && logentry.getDate() > before)
+                    searchResults
+            }
+
+        } catch (ParseException e) {
+            System.out.println("Could not format date");
+            e.printStackTrace();
+        }
+        date.toString();
+
+
     }
 
 
@@ -41,16 +71,27 @@ public class Server {
 
         }
 
+        public void updateLog(String logMessage){
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yy.MM.dd hh:mm");
+            LogEntry entry = new LogEntry(sdf.format(date),logMessage);
+
+            controller.updateLog(entry.toString());
+        }
+
 
         @Override
         public void run() {
             Socket socket = null;
+
             try(ServerSocket serverSocket = new ServerSocket(port)){
-                System.out.println("MessageServer listening on port " + serverSocket.getLocalPort());
+
+                updateLog("Server is listening on port: " + port);
                 while(!Thread.interrupted()) {
-                    System.out.println("Trying to connect");
+
                     socket = serverSocket.accept();
-                    System.out.println("Connection established");
+                    updateLog("Connection established!");
+                    System.out.println();
                     ClientHandler handler = new ClientHandler(socket);
                     handler.start();
                     handlers.add(handler);
@@ -68,29 +109,28 @@ public class Server {
                 }
 
             }
-            System.out.println("MessageServer down.");
+            updateLog("MessageServer down.");
 
         }
 
         //Notifies handlers that a new user logged in and that they need to update their userlists via addOnlineUser()
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            System.out.println("PCE was fired to server");
             if(evt.getPropertyName().equals("New user")){
                 for(ClientHandler handler : handlers){
                     handler.addOnlineUser();
                 }
+                updateLog(((User) evt.getNewValue()).getUsername() + " logged in");
             }
             else if(evt.getPropertyName().equals("User disconnected")){
                 for(ClientHandler handler : handlers){
                     handler.removeUser((User) evt.getNewValue());
                 }
+                updateLog(((User) evt.getNewValue()).getUsername() + " logged out");
             }
             else if(evt.getPropertyName().equals("New message")){
-                //Loop through recievers
-
                 TextMessage message = (TextMessage) evt.getNewValue();
-                System.out.println("Checking recievers: " + message.getRecievers().size());
+                updateLog((message.toString()));
                 ArrayList<User> recievers =((TextMessage) evt.getNewValue()).getRecievers();
                 for(User reciever : recievers){
                     for(var entry : userlist.keySet()){
@@ -104,7 +144,7 @@ public class Server {
                         }
                         else{
                             System.out.println("User not online");
-                            saveOfflineMessage(reciever.getUsername(), message.getMessage());
+                            saveOfflineMessage(reciever.getUsername(), message);
 
                         }
                     }
@@ -116,17 +156,17 @@ public class Server {
 
         }
 
-        private void saveOfflineMessage(String username, String message) {
+        private void saveOfflineMessage(String username, TextMessage message) {
             if(!offlineMessages.containsKey(username)){
-                System.out.println("User has no saved messages");
-                ArrayList<String> messageList = new ArrayList();
+                updateLog("User : " + username + "has no saved messages");
+                ArrayList<TextMessage> messageList = new ArrayList();
                 messageList.add(message);
                 offlineMessages.put(username,messageList);
             }
             else {
                 //get messagelist for user and add messages
-                System.out.println("Offline user found. Saving message");
-                ArrayList<String> messageList = (ArrayList<String>) offlineMessages.get(username);
+                updateLog("User: " + username + " is offline. Saving messages ");
+                ArrayList<TextMessage> messageList = (ArrayList<TextMessage>) offlineMessages.get(username);
                 messageList.add(message);
             }
         }
@@ -162,7 +202,6 @@ public class Server {
                                 userlist.put(user,this);
                                 checkOfflineMessages(user);
                                 notifyServer.firePropertyChange("New user",null,user);
-                                log.add("User: " + user.getUsername() + " logged in");
                             }
                             else if (user.getStatus() == 0){
                                 notifyServer.firePropertyChange("User disconnected",null,user);
@@ -171,11 +210,7 @@ public class Server {
                         }
                         else if(object instanceof TextMessage){
                             TextMessage message = (TextMessage) object;
-                            System.out.println("TextMessage found: " + message.getMessage());
-                            System.out.println("Sent by: " + message.getSender().getUsername());
                             notifyServer.firePropertyChange("New message",null,message);
-                            log.add("User: " + message.getSender() + " Sent: " + message.getMessage() +
-                                     " to: " + message.getSender());
 
                         }
 
@@ -190,9 +225,7 @@ public class Server {
                 }
 
                 }
-                public void logTraffick(){
-                //Print traffick to file for every new activity
-                }
+
 
 
             public void addOnlineUser(){
@@ -217,7 +250,6 @@ public class Server {
             }
 
             public void sendMessage(TextMessage message){
-                System.out.println("Sending message");
                 try {
                     oos.writeObject(message);
                     oos.flush();
@@ -227,25 +259,25 @@ public class Server {
             }
 
             public void checkOfflineMessages(User user){
-                System.out.println("Checking offline messages for: " + user.getUsername());
+                updateLog("Checking offline messages for: " + user.getUsername());
                 User Ali = new User("Ali");
-                ArrayList<String> alisMessages = new ArrayList<>();
-                alisMessages.add("1.Detta är ett test");
-                alisMessages.add("2.Även detta");
+                ArrayList<TextMessage> alisMessages = new ArrayList<>();
+                alisMessages.add(new TextMessage("1.Detta är ett test",Ali));
+                alisMessages.add(new TextMessage("2.Även detta",Ali));
                 offlineMessages.put(Ali, alisMessages);
                 //offlineMessages.put(new User("Ali").getUsername(),new ArrayList<String>().add("Detta är ett test"));
 
                 for(int i = 0; i<offlineMessages.size(); i++){
-                   // System.out.println("User has offline messages");
                     for (var nextUser : offlineMessages.keySet()){
                         User offlineUser = (User) nextUser;
                         if(offlineUser.getUsername().equals(user.getUsername())){
-                            System.out.println("User: " +offlineUser.getUsername() + " has offline messages");
-                            System.out.println("Loading offline messages");
-                            ArrayList<String> messagelist = (ArrayList<String>) offlineMessages.get(offlineUser);
+                            updateLog("User: " +offlineUser.getUsername() + " has offline messages");
+                            updateLog("Loading offline messages");
+                            ArrayList<TextMessage> messagelist = (ArrayList<TextMessage>) offlineMessages.get(offlineUser);
                             for(int j = 0; j<messagelist.size(); j++){
                                 //Use sendMessage method instead
-                                System.out.println("Message: " + messagelist.get(j));
+                                sendMessage(messagelist.get(j));
+                                updateLog("Message: " + messagelist.get(j));
                             }
 
 
@@ -258,7 +290,7 @@ public class Server {
 
                         }
                         else {
-                            System.out.println("User: " + user.getUsername() + " has no offline messages");
+                            updateLog("User: " + user.getUsername() + " has no offline messages");
                         }
 
                     }
@@ -278,7 +310,10 @@ public class Server {
                 }
             }
 
+
+
         }
+
 }
 }
 
