@@ -17,6 +17,7 @@ public class Client {
     private Controller controller;
     private Contacts contacts;
     private ArrayList<User> onlineUsers = new ArrayList<>();
+    private Boolean flag;
 
     public Client(String ip, int port, User user, Controller controller) {
         this.ip = ip;
@@ -24,7 +25,9 @@ public class Client {
         this.user = user;
         this.controller = controller;
         contacts = new Contacts();
+        flag = true;
         Connect();
+
     }
 
     public void Connect()
@@ -60,10 +63,11 @@ public class Client {
             try {
                 oos.writeObject(user);
                 oos.flush();
+                socket.close();
+                flag = false;
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            disconnect();
         }
     }
 
@@ -115,7 +119,7 @@ public class Client {
     }
     public class Listener extends Thread {
         public synchronized void run() {
-            while(true) {
+            while(flag) {
 
                 try {
 

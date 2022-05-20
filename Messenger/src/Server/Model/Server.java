@@ -138,12 +138,14 @@ public class Server {
             private ObjectInputStream ois;
             private User user = null;
             private PropertyChangeSupport notifyServer = new PropertyChangeSupport(this);;
+            private Boolean flag;
 
             public ClientHandler(Socket socket) throws IOException {
                 String message, response;
                 this.socket = socket;
                 ois = new ObjectInputStream(socket.getInputStream());
                 oos = new ObjectOutputStream(socket.getOutputStream());
+                flag = true;
             }
 
 
@@ -151,7 +153,7 @@ public class Server {
             @Override
             public void run() {
 
-                while(true) {
+                while(flag) {
                     Object object = null;
 
                     try {
@@ -273,9 +275,12 @@ public class Server {
                 try {
                     oos.writeObject(offlineUser);
                     oos.flush();
+                    socket.close();
+                    flag = false;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
             }
 
         }
