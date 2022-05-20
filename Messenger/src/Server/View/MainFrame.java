@@ -29,4 +29,10 @@ public class MainFrame extends JFrame {
     public void updateLog(String logMessage) {
         logPanel.updateLog(logMessage);
     }
+
+    public void setSearchresults(DefaultListModel log){
+        logPanel.setLog(log);
+    }
+
+
 }

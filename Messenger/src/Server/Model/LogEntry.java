@@ -15,7 +15,7 @@ public class LogEntry {
     }
 
     public String getDate() {
-        return date;
+       return date;
     }
 
     public void setDate(String date) {
