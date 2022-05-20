@@ -14,7 +14,7 @@ public class MainFrame extends JFrame {
     private int width;
     private int height;
 
-    public MainFrame(int width, int height, Controller controller, String username){
+    public MainFrame(int width, int height, Controller controller){
         this.width = width;
         this.height = height;
         this.controller = controller;

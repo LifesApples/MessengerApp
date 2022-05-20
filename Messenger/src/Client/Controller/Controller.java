@@ -26,21 +26,23 @@ public class Controller {
 
         //server = new Server(2343);
         lp = new LoginPage(this);
-
+        mainFrame = new MainFrame( 600,600, this);
 
     }
 
     public void signIn() {
         client = new Client("127.0.0.1",2343, myUser, this);
         System.out.println("client");
-        mainFrame = new MainFrame( 600,600, this, myUser.getUsername());
+
         System.out.println("MF started");
         setUpContactsGUI();
+
 
     }
 
 
     public void setUpContactsGUI() {
+
         String[] contacts = new String[client.getContacts().getContactlist().size()];
         for (int i = 0; i < contacts.length; i++) {
             contacts[i] =  client.getContacts().getContactlist().get(i).getUsername();;
@@ -50,6 +52,7 @@ public class Controller {
     }
 
     public void setUpOnlineUsersGUI (ArrayList<User> users) {
+
         String[] onlineUsers = new String[users.size()];
         for (int i = 0; i < onlineUsers.length; i++) {
             onlineUsers[i] = users.get(i).getUsername();

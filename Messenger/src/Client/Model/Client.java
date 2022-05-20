@@ -87,11 +87,23 @@ public class Client {
 
 
     public void addOnlineUser(User user) {
-        if(!onlineUsers.contains(user)){
-            onlineUsers.add(user);
+        System.out.println(this.user.getUsername());
+        System.out.println(user.getUsername());
+        if(!onlineUsers.contains(user)) {
+            if (!this.user.getUsername().equals(user.getUsername())) {
+                onlineUsers.add(user);
+            }
         }
 
         controller.setUpOnlineUsersGUI(onlineUsers);
+    }
+
+    public void removeOfflineUser(User user) {
+        for (User u : onlineUsers) {
+            if (u == user) {
+                onlineUsers.remove(u);
+            }
+        }
     }
 
     public void checkContactOnline(User user) {
@@ -111,17 +123,13 @@ public class Client {
 
                     if (object instanceof User) {
                         User user = (User) object;
-                        try {
-                            System.out.println("CLient recieved: " + ((User) object).getUsername());
-                            Thread.sleep(2500);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                        System.out.println("CLient recieved: " + ((User) object).getUsername());
+
                         if(user.getStatus()== 1){
                             addOnlineUser(user);
                         }
                         else if(user.getStatus()== 0){
-                            //remove user
+                            removeOfflineUser(user);
                         }
 
                     }
