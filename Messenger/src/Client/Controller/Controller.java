@@ -89,12 +89,17 @@ public class Controller {
     }
     public void sendMessage(String message, String path, ArrayList<String> recievers) {
         TextMessage m = new TextMessage(message, new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(30,30, Image.SCALE_DEFAULT)), myUser);
-        for (User u : client.getOnlineUsers())
+        System.out.println("letar reciever response");
+        for (User u : client.getOnlineUsers()) {
+            System.out.println("Online Users " + u.getUsername());
             for (String r : recievers) {
+                System.out.println(r);
                 if (u.getUsername().equals(r)) {
                     m.addReciever(u);
+                    System.out.println("reciever hittad");
                 }
             }
+        }
 
         mainFrame.appendTextMessageGUI(m.getSender().getUsername() + ":");
         mainFrame.appendTextMessageGUI(m.getIcon());
@@ -153,16 +158,17 @@ public class Controller {
 
     public void appendTextMessageGUI(Object obj) {
         if (obj instanceof TextMessage) {
-            System.out.println("Message Recieved");
+            mainFrame.appendTextMessageGUI(((TextMessage) obj).getSender().getUsername());
             mainFrame.appendTextMessageGUI(((TextMessage) obj).getIcon());
             mainFrame.appendTextMessageGUI(((TextMessage) obj).getMessage());
-            mainFrame.appendTextMessageGUI(((TextMessage) obj).getSender().getUsername());
+
             //mainFrame.appendTextMessageGUI(((TextMessage) obj).getTimeSent());
         }
 
     }
 
-
-
+    public User getMyUser() {
+        return myUser;
+    }
 }
 

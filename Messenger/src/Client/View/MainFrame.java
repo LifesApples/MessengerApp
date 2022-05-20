@@ -56,6 +56,9 @@ public class MainFrame extends JFrame {
     }
 
     public void appendTextMessageGUI(Object obj) {
+        if (mainPanel == null) {
+            mainPanel = new MainPanel(width, height, controller, obj);
+        }
         mainPanel.addMessage(obj);
     }
 }

@@ -17,7 +17,7 @@ public class MainPanel extends JFrame implements ActionListener {
 
     private JPanel mainPanel, chatWindow;
     private String contactName, username;
-    private ArrayList<String> recievers;
+    private ArrayList<String> recievers = new ArrayList<>();
     private Controller controller;
     private Chattwindow chattWindow;
     private TextWindow textWindow;
@@ -63,6 +63,36 @@ public class MainPanel extends JFrame implements ActionListener {
 
     }
 
+    public MainPanel(int width, int height, Controller controller, Object object) {
+
+        this.controller = controller;
+        setSize(width, height);
+        initiateList();
+        initiateButtons();
+        initiateChatWindow();
+        recievers.add((String) object);
+
+        textWindow = new TextWindow(width, height, controller, (String)object);
+
+        profilePic = new JLabel(new ImageIcon());
+        profilePic.setBounds(450, 400, 100, 100);
+
+
+        mainPanel = new JPanel(null);
+        mainPanel.add(sendButton);
+        mainPanel.add(pictureButton);
+        mainPanel.add(chatWindow);
+        mainPanel.add(textWindow);
+        mainPanel.add(profilePic);
+
+        mainPanel.setBounds(0, 0, width, height);
+
+        setVisible(true);
+        setContentPane(mainPanel);
+        setBackground(Color.PINK);
+
+    }
+
     private void setUp() {
 
     }
@@ -77,6 +107,7 @@ public class MainPanel extends JFrame implements ActionListener {
         chatWindow.add(messageList);
 
     }
+
 
     private void initiateButtons() {
         sendButton = new JButton();
@@ -93,7 +124,7 @@ public class MainPanel extends JFrame implements ActionListener {
 
     private void initiateList() {
         messageList = new JList(dlm);
-        messageList.setBackground(Color.GREEN);
+        messageList.setBackground(Color.WHITE);
 
     }
 
