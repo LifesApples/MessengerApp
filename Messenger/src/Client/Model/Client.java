@@ -59,6 +59,7 @@ public class Client {
             user.setStatus(0);
             try {
                 oos.writeObject(user);
+                oos.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -109,13 +110,20 @@ public class Client {
                     Object object = ois.readObject();
 
                     if (object instanceof User) {
-
+                        User user = (User) object;
                         try {
-                            Thread.sleep(5000);
+                            System.out.println("CLient recieved: " + ((User) object).getUsername());
+                            Thread.sleep(2500);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        addOnlineUser((User) object);
+                        if(user.getStatus()== 1){
+                            addOnlineUser(user);
+                        }
+                        else if(user.getStatus()== 0){
+                            //remove user
+                        }
+
                     }
 
                     if (object instanceof TextMessage) {
