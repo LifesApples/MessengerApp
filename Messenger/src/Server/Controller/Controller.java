@@ -4,6 +4,7 @@ package Server.Controller;
 import Server.Model.Server;
 import Server.View.MainFrame;
 
+import javax.swing.*;
 import java.io.IOException;
 
 public class Controller {
@@ -31,5 +32,9 @@ public class Controller {
 
     public void updateLog(String logmessage) {
         mainFrame.updateLog(logmessage);
+    }
+
+    public DefaultListModel getSearchRes(String from, String to) {
+        return server.searchDates(from,to);
     }
 }

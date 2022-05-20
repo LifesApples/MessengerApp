@@ -4,6 +4,7 @@ import Client.Model.TextMessage;
 import Client.Model.User;
 import Server.Controller.Controller;
 
+import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -22,36 +23,55 @@ public class Server {
 
     private int port;
     private ArrayList<LogEntry> log;
-    private ArrayList<LogEntry> searchResults;
+    private DefaultListModel<String> searchResults;
     private Controller controller;
 
     public Server(int port, Controller controller) throws IOException {
         this.port = port;
         this.controller = controller;
         log = new ArrayList<>();
-        searchResults = new ArrayList<>();
+        searchResults = new DefaultListModel<>();
         new Connect(port).start();
     }
 
-    public void searchDates(String from, String to){
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
+    public void updateLog(String logMessage){
         Date date = new Date();
-        try {
-            Date after = formatter.parse(from);
-            Date before = formatter.parse(to);
+        SimpleDateFormat sdf = new SimpleDateFormat("yy.MM.dd hh:mm");
+        LogEntry entry = new LogEntry(sdf.format(date),logMessage);
+        log.add(entry);
+        controller.updateLog(entry.toString());
+    }
 
-            for(int i = 0; i<log.size();i++){
-                LogEntry logentry = log.get(i);
-                //Om detta datumet är efter/före detta datumet men före detta & detta datumet är efter...s
-                if(after.before(logentry.getDate()) < after && logentry.getDate() > before)
-                    searchResults
+    public DefaultListModel<String> searchDates(String from, String to){
+
+        System.out.println("Checking dates in server");
+        SimpleDateFormat formatter = new SimpleDateFormat("yy.MM.dd hh:mm", Locale.ENGLISH);
+        try {
+            Date date1 = formatter.parse(from);
+            Date date2 = formatter.parse(to);
+
+            for(int i = 0; i<log.size();i++) {
+                LogEntry logDate = log.get(i);
+                Date loggedDate = new SimpleDateFormat("yy.MM.dd hh:mm").parse(logDate.getDate());
+                System.out.println("checking log for dates");
+                if (loggedDate.after(date1) && loggedDate.before(date2)) {
+                    System.out.println("Found result");
+                    searchResults.addElement(logDate.getDate());
+                }
             }
+            System.out.println("Res size: " + searchResults.size());
+
 
         } catch (ParseException e) {
             System.out.println("Could not format date");
             e.printStackTrace();
         }
-        date.toString();
+        for (int i = 0; i<searchResults.size(); i++){
+            System.out.println("Looping through results");
+            System.out.println(searchResults.get(i));
+
+        }
+        return searchResults;
 
 
     }
@@ -59,7 +79,6 @@ public class Server {
 
     private class Connect extends Thread implements PropertyChangeListener{
         private int port;
-        private ServerSocket serverSocket;
         private ArrayList<ClientHandler> handlers;
         private HashMap userlist;
         private static HashMap offlineMessages;
@@ -71,13 +90,7 @@ public class Server {
 
         }
 
-        public void updateLog(String logMessage){
-            Date date = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yy.MM.dd hh:mm");
-            LogEntry entry = new LogEntry(sdf.format(date),logMessage);
 
-            controller.updateLog(entry.toString());
-        }
 
 
         @Override
@@ -89,7 +102,6 @@ public class Server {
                 updateLog("Server is listening on port: " + port);
                 while(!Thread.interrupted()) {
 
-                    socket = serverSocket.accept();
                     updateLog("Connection established!");
                     System.out.println();
                     ClientHandler handler = new ClientHandler(socket);
@@ -123,11 +135,28 @@ public class Server {
                 updateLog(((User) evt.getNewValue()).getUsername() + " logged in");
             }
             else if(evt.getPropertyName().equals("User disconnected")){
-                for(ClientHandler handler : handlers){
-                    handler.removeUser((User) evt.getNewValue());
+                for(int i = 0; i<handlers.size(); i++) {
+                    if(handlers.get(i).getUser().getUsername().equals(((User) evt.getNewValue()).getUsername())){
+                        try {
+                            System.out.println("Found user/client: " + ((User) evt.getNewValue()).getUsername());
+                            System.out.println("Closing socket for: " + handlers.get(i).getUser().getUsername());
+                            handlers.get(i).socket.close();
+                            handlers.remove(handlers.get(i));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    else {
+                        handlers.get(i).removeUser((User) evt.getNewValue());
+                    }
+                    updateLog(((User) evt.getNewValue()).getUsername() + " logged out");
+
                 }
-                updateLog(((User) evt.getNewValue()).getUsername() + " logged out");
+
             }
+
             else if(evt.getPropertyName().equals("New message")){
                 TextMessage message = (TextMessage) evt.getNewValue();
                 updateLog((message.toString()));
@@ -179,6 +208,7 @@ public class Server {
             private User user = null;
             private PropertyChangeSupport notifyServer = new PropertyChangeSupport(this);;
             private Boolean flag;
+            private int counter;
 
             public ClientHandler(Socket socket) throws IOException {
                 String message, response;
@@ -186,6 +216,7 @@ public class Server {
                 ois = new ObjectInputStream(socket.getInputStream());
                 oos = new ObjectOutputStream(socket.getOutputStream());
                 flag = true;
+                counter =0;
             }
 
 
@@ -197,15 +228,32 @@ public class Server {
                     Object object = null;
 
                     try {
-                        object = ois.readObject();
+
+                        if(socket.isClosed()){
+                            System.out.println("Socket is closed. Closing ois.");
+                            ois.close();
+                            System.out.println("OIS closed. changing flag to false.");
+                            flag = false;
+                        }
+                        else {
+                            //System.out.println("Socket not closed looping");
+                            object = ois.readObject();
+                        }
+
                         if(object instanceof User) {
                             user = (User) object;
+                            System.out.println("loop " +counter);
+                            counter++;
+
+                            System.out.println("user: " + user.getUsername() + " status is: " + user.getStatus());
                             if(user.getStatus() == 1){
                                 userlist.put(user,this);
                                 checkOfflineMessages(user);
                                 notifyServer.firePropertyChange("New user",null,user);
+
                             }
                             else if (user.getStatus() == 0){
+                                System.out.println("Found status 0");
                                 notifyServer.firePropertyChange("User disconnected",null,user);
                             }
 
@@ -216,10 +264,13 @@ public class Server {
 
                         }
 
+
                     } catch (IOException e) {
-                        e.printStackTrace();
+                       // updateLog(e.getMessage());
+                       // e.printStackTrace();
                     } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+                       // updateLog(e.getMessage());
+                       // e.printStackTrace();
                     }
 
 
@@ -237,6 +288,7 @@ public class Server {
                     oos.writeObject(((User) user1));
                     oos.flush();
                 } catch (IOException e) {
+                        updateLog(e.getMessage());
                         e.printStackTrace();
                     }
                    }
@@ -256,6 +308,7 @@ public class Server {
                     oos.writeObject(message);
                     oos.flush();
                 } catch (IOException e) {
+                    updateLog(e.getMessage());
                     e.printStackTrace();
                 }
             }
@@ -307,9 +360,9 @@ public class Server {
                 try {
                     oos.writeObject(offlineUser);
                     oos.flush();
-                    socket.close();
-                    flag = false;
+                    //flag = false;
                 } catch (IOException e) {
+                    updateLog(e.getMessage());
                     e.printStackTrace();
                 }
 

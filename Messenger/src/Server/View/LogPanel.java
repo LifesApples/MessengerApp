@@ -4,8 +4,10 @@ import Server.Controller.Controller;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class LogPanel extends JPanel {
+public class LogPanel extends JPanel implements ActionListener {
     private int width;
     private int height;
     private Controller controller;
@@ -58,14 +60,29 @@ public class LogPanel extends JPanel {
         search.setLocation(10, 140);
         search.setText("Search");
         search.setSize(100,20);
+        search.addActionListener(this);
         add(search);
+    }
 
-
-
-
+    public void setLog(DefaultListModel log) {
+        this.log = log;
+        resultWindow.setModel(log);
+        add(resultWindow);
     }
 
     public void updateLog(String logMessage) {
         log.addElement(logMessage);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == search){
+            String from = fromDate.getText();
+            String to = toDate.getText();
+            DefaultListModel results = controller.getSearchRes(from,to);
+            results.addElement("Hej detta kommer från logpanel/sökresultat");
+            setLog(results);
+
+        }
     }
 }
