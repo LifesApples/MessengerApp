@@ -3,7 +3,6 @@ package Client.View;
 import Client.Controller.Controller;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 
 public class MainFrame extends JFrame {
@@ -27,18 +26,19 @@ public class MainFrame extends JFrame {
         setContentPane(contactPanel);
         setVisible(true);
 
-     //   setBackground(Color.BLACK);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
 
-    public void sendErrormessage (String str) {
-        JOptionPane.showMessageDialog(null, str);
-    }
 
     public void setProfileGUI(String name, Icon icon) {
         mainPanel.setIcon(icon);
         mainPanel.setUsername(name);
+    }
+
+    public void setContactProfileGUI(String name, Icon icon) {
+        mainPanel.setContactIcon(icon);
+
     }
 
 
@@ -47,6 +47,9 @@ public class MainFrame extends JFrame {
         mainPanel = new MainPanel(width, height, controller, recievers, username);
     }
 
+    public void contactPanelBorder (String username) {
+        contactPanel.setBorder(username);
+    }
     public void setContacts(String[] contacts) {
         contactPanel.updateMyContacts(contacts);
     }
@@ -58,7 +61,12 @@ public class MainFrame extends JFrame {
     public void appendTextMessageGUI(Object obj) {
         if (mainPanel == null) {
             mainPanel = new MainPanel(width, height, controller, obj);
+            mainPanel.setIcon(controller.getMyUser().getIcon());
         }
         mainPanel.addMessage(obj);
+    }
+
+    public MainPanel getMainPanel() {
+        return mainPanel;
     }
 }

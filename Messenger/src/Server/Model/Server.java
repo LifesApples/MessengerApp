@@ -43,8 +43,8 @@ public class Server {
             for(int i = 0; i<log.size();i++){
                 LogEntry logentry = log.get(i);
                 //Om detta datumet är efter/före detta datumet men före detta & detta datumet är efter...s
-                if(after.before(logentry.getDate()) < after && logentry.getDate() > before)
-                    searchResults
+               // if(after.before(logentry.getDate()) < after && logentry.getDate() > before)
+             //       searchResults
             }
 
         } catch (ParseException e) {

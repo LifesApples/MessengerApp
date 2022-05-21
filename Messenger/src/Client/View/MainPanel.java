@@ -8,10 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-
-import static javax.print.attribute.standard.Chromaticity.COLOR;
 
 public class MainPanel extends JFrame implements ActionListener {
 
@@ -19,15 +16,14 @@ public class MainPanel extends JFrame implements ActionListener {
     private String contactName, username;
     private ArrayList<String> recievers = new ArrayList<>();
     private Controller controller;
-    private Chattwindow chattWindow;
     private TextWindow textWindow;
-    private JLabel profilePic;
-    private JButton sendButton, contactList, pictureButton;
+    private JLabel profilePic, contactProfilePic;
+    private JButton sendButton, pictureButton;
     private JFileChooser fileChooser;
     private File file;
     private JList messageList;
     private DefaultListModel dlm = new DefaultListModel();
-    private Icon icon;
+    private JScrollPane scroll;
 
 
 
@@ -46,6 +42,9 @@ public class MainPanel extends JFrame implements ActionListener {
 
         profilePic = new JLabel(new ImageIcon());
         profilePic.setBounds(450, 400, 100, 100);
+
+        contactProfilePic = new JLabel(new ImageIcon());
+        contactProfilePic.setBounds(450, 100, 100, 100);
 
 
         mainPanel = new JPanel(null);
@@ -77,6 +76,9 @@ public class MainPanel extends JFrame implements ActionListener {
         profilePic = new JLabel(new ImageIcon());
         profilePic.setBounds(450, 400, 100, 100);
 
+        contactProfilePic = new JLabel(new ImageIcon());
+        contactProfilePic.setBounds(450, 100, 100, 100);
+
 
         mainPanel = new JPanel(null);
         mainPanel.add(sendButton);
@@ -84,6 +86,7 @@ public class MainPanel extends JFrame implements ActionListener {
         mainPanel.add(chatWindow);
         mainPanel.add(textWindow);
         mainPanel.add(profilePic);
+        mainPanel.add(contactProfilePic);
 
         mainPanel.setBounds(0, 0, width, height);
 
@@ -93,18 +96,14 @@ public class MainPanel extends JFrame implements ActionListener {
 
     }
 
-    private void setUp() {
-
-    }
-
 
     private void initiateChatWindow() {
         chatWindow = new JPanel(new GridLayout(1, 1));
         chatWindow.setSize(435, 300);
         chatWindow.setLocation(10, 55);
         chatWindow.setBackground(Color.BLACK);
-        chatWindow.setBorder(BorderFactory.createTitledBorder("Chat with " + contactName));
-        chatWindow.add(messageList);
+        chatWindow.setBorder(BorderFactory.createTitledBorder("Chat with " ));
+        chatWindow.add(scroll);
 
     }
 
@@ -125,25 +124,22 @@ public class MainPanel extends JFrame implements ActionListener {
     private void initiateList() {
         messageList = new JList(dlm);
         messageList.setBackground(Color.WHITE);
+        scroll = new JScrollPane(messageList);
+        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
     }
 
-    public String getUsername() {
-        return username;
-    }
 
     public void setUsername(String username) {
         this.username = username;
     }
 
-    public TextWindow getTextWindow() {
-        return textWindow;
-    }
 
-    public void setTextWindow(TextWindow textWindow) {
-        this.textWindow = textWindow;
-    }
 
+    public void setRecievers(String reciever) {
+        this.recievers.add(reciever);
+    }
 
     public void chooseFile() {
         fileChooser = new JFileChooser();
@@ -160,6 +156,10 @@ public class MainPanel extends JFrame implements ActionListener {
 
     public void setIcon(Icon icon) {
         profilePic.setIcon(icon);
+    }
+
+    public void setContactIcon(Icon icon) {
+        contactProfilePic.setIcon(icon);
     }
 
     @Override

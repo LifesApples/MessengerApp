@@ -36,6 +36,7 @@ public class Controller {
 
         System.out.println("MF started");
         setUpContactsGUI();
+        mainFrame.contactPanelBorder(myUser.getUsername());
 
 
     }
@@ -66,9 +67,22 @@ public class Controller {
         mainFrame.setProfileGUI(myUser.getUsername(), myUser.getIcon() );
     }
 
+    public void setContactProfile(User user) {
+        if (user.getIcon() != null) {
+            mainFrame.setContactProfileGUI(user.getUsername(), user.getIcon());
+        }
+    }
+
     public void openChatWindow(ArrayList<String> recievers) {
         mainFrame.openChatwindow(myUser.getUsername(), recievers);
         setProfile();
+        if (recievers.size() == 1) {
+            for (User u : client.getOnlineUsers()) {
+                if (recievers.get(0).equals(u.getUsername())) {
+                    setContactProfile(u);
+                }
+            }
+        }
     }
 
 
@@ -105,6 +119,7 @@ public class Controller {
         mainFrame.appendTextMessageGUI(m.getSender().getUsername() + ":");
         mainFrame.appendTextMessageGUI(m.getIcon());
         mainFrame.appendTextMessageGUI(m.getMessage());
+
         try {
             client.sendMessage(m);
         } catch (IOException e) {
@@ -114,18 +129,10 @@ public class Controller {
     }
 
 
-
-    public void sendGUIerror(String str) {
-       // mainFrame.sendErrormessage(str);
-    }
-
-
-
     public void disconnectClient() {
         client.disconnect();
     }
 
-    public void setContactUser () {}
 
     public void setMyUser(String username, String path) {
         myUser = new User(username, new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(100,100, Image.SCALE_DEFAULT)));
@@ -159,11 +166,18 @@ public class Controller {
 
     public void appendTextMessageGUI(Object obj) {
         if (obj instanceof TextMessage) {
+
             mainFrame.appendTextMessageGUI(((TextMessage) obj).getSender().getUsername());
             mainFrame.appendTextMessageGUI(((TextMessage) obj).getIcon());
             mainFrame.appendTextMessageGUI(((TextMessage) obj).getMessage());
-
+            setContactProfile(((TextMessage) obj).getSender());
             //mainFrame.appendTextMessageGUI(((TextMessage) obj).getTimeSent());
+            if (((TextMessage) obj).getRecievers().size() > 1) {
+                for (User u :((TextMessage) obj).getRecievers()) {
+                    mainFrame.getMainPanel().setRecievers(u.getUsername());
+                }
+
+            }
         }
 
     }

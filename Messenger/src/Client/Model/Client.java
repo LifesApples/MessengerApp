@@ -4,9 +4,13 @@ import Client.Controller.Controller;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 
-//
+/**
+ * Client Class controls connections to server
+ * @author Patrik Brandell
+ */
 public class Client {
     private String ip;
     private int port;
@@ -19,6 +23,14 @@ public class Client {
     private ArrayList<User> onlineUsers = new ArrayList<>();
     private Boolean flag;
 
+    /**
+     *
+     * @param ip - IP to server
+     * @param port - Port to server
+     * @param user - Logged in user
+     * @param controller - Controller
+     */
+
     public Client(String ip, int port, User user, Controller controller) {
         this.ip = ip;
         this.port = port;
@@ -29,6 +41,10 @@ public class Client {
         Connect();
 
     }
+
+    /**
+     * Connect to server
+     */
 
     public void Connect()
     {
@@ -43,20 +59,26 @@ public class Client {
             ois = new ObjectInputStream(new BufferedInputStream (socket.getInputStream()));
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            controller.sendGUIerror("Could not connect to server");
-        }
-
+        } catch (IOException e) {}
         new Listener().start();
 
     }
+
+    /**
+     *
+     * @param message - Messageobject to send to server
+     * @throws IOException
+     */
 
     public void sendMessage(TextMessage message) throws IOException {
         oos.writeObject(message);
         oos.flush();
     }
 
+    /**
+     * Disconnect from server
+     * set userstatus to 0
+     */
     public void disconnect() {
         while (user.getStatus() == 1) {
             user.setStatus(0);
@@ -66,29 +88,39 @@ public class Client {
                 socket.close();
                 flag = false;
             } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }
 
+    /**
+     *
+     * @param user - User object to add to contacts
+     */
     public void addContact(User user) {
         contacts.addContact(user);
     }
 
-
+    /**
+     *
+     * @return contacts class
+     */
     public Contacts getContacts() {
         return contacts;
     }
 
-    public void setContacts(Contacts contacts) {
-        this.contacts = contacts;
-    }
-
+    /**
+     *
+     * @return Arraylist of User objects
+     */
     public ArrayList<User> getOnlineUsers() {
         return onlineUsers;
     }
 
 
+    /**
+     *
+     * @param user - Add User object to onlinelist, recieved from server
+     */
 
     public void addOnlineUser(User user) {
         System.out.println(this.user.getUsername());
@@ -102,6 +134,10 @@ public class Client {
         controller.setUpOnlineUsersGUI(onlineUsers);
     }
 
+    /**
+     *
+     * @param user - Remove user object from onlinelist if recieved as disconnected from server
+     */
     public void removeOfflineUser(User user) {
         for (User u : onlineUsers) {
             if (u == user) {
@@ -110,13 +146,10 @@ public class Client {
         }
     }
 
-    public void checkContactOnline(User user) {
-        for (User u : contacts.getContactlist()) {
-            if (u.getUsername().equals(user.getUsername())) {
-                //controller set online
-            }
-        }
-    }
+
+    /**
+     * Inner Class Listener extends Thread - Listener from server
+     */
     public class Listener extends Thread {
         public synchronized void run() {
             while(flag) {
@@ -143,13 +176,9 @@ public class Client {
                         System.out.println("Text message recieved!");
                     }
 
-                    if (object instanceof String) {
-                        controller.sendGUIerror((String) object);
-                        //Send String to controller (server messages)
-                    }
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+
 
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
