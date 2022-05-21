@@ -141,6 +141,10 @@ public class MainPanel extends JFrame implements ActionListener {
         this.recievers.add(reciever);
     }
 
+    public ArrayList<String> getRecievers() {
+        return recievers;
+    }
+
     public void chooseFile() {
         fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);

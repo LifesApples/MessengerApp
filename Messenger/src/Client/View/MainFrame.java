@@ -9,7 +9,6 @@ public class MainFrame extends JFrame {
     private Controller controller;
     private MainPanel mainPanel;
     private ContactPanel contactPanel;
-    private LoginPage lp;
     private int width;
     private int height;
 
@@ -63,6 +62,7 @@ public class MainFrame extends JFrame {
             mainPanel = new MainPanel(width, height, controller, obj);
             mainPanel.setIcon(controller.getMyUser().getIcon());
         }
+
         mainPanel.addMessage(obj);
     }
 
