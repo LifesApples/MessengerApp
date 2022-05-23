@@ -95,6 +95,14 @@ public class Controller {
                 }
             }
 
+        for (User u : client.getContacts().getContactlist())
+            for (String r : recievers) {
+                if (u.getUsername().equals(r)) {
+                    m.addReciever(u);
+                }
+            }
+
+
         mainFrame.appendTextMessageGUI(m.getSender().getUsername()+ ":");
         mainFrame.appendTextMessageGUI(m.getMessage());
         try {
@@ -102,6 +110,7 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 
     }
     public void sendMessage(String message, String path, ArrayList<String> recievers) {
@@ -115,7 +124,12 @@ public class Controller {
                 }
             }
         }
-
+        for (User u : client.getContacts().getContactlist())
+            for (String r : recievers) {
+                if (u.getUsername().equals(r)) {
+                    m.addReciever(u);
+                }
+            }
         mainFrame.appendTextMessageGUI(m.getSender().getUsername() + ":");
         mainFrame.appendTextMessageGUI(m.getIcon());
         mainFrame.appendTextMessageGUI(m.getMessage());

@@ -103,6 +103,7 @@ public class Server {
                 while(!Thread.interrupted()) {
 
                     updateLog("Connection established!");
+                    socket = serverSocket.accept();
                     System.out.println();
                     ClientHandler handler = new ClientHandler(socket);
                     handler.start();
@@ -135,24 +136,26 @@ public class Server {
                 updateLog(((User) evt.getNewValue()).getUsername() + " logged in");
             }
             else if(evt.getPropertyName().equals("User disconnected")){
+                System.out.println("Notifying all the others");
                 for(int i = 0; i<handlers.size(); i++) {
                     if(handlers.get(i).getUser().getUsername().equals(((User) evt.getNewValue()).getUsername())){
                         try {
                             System.out.println("Found user/client: " + ((User) evt.getNewValue()).getUsername());
                             System.out.println("Closing socket for: " + handlers.get(i).getUser().getUsername());
-                            handlers.get(i).socket.close();
-                            handlers.remove(handlers.get(i));
+                            handlers.get(i).socket.close(); //Close socket for that handler
+                            handlers.remove(handlers.get(i)); // remove the handler from the handler list
+
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
-                    }
-
-                    else {
-                        handlers.get(i).removeUser((User) evt.getNewValue());
                     }
                     updateLog(((User) evt.getNewValue()).getUsername() + " logged out");
 
+                }
+                for(int i = 0; i<handlers.size(); i++){
+                    handlers.get(i).removeUser((User) evt.getNewValue());
+                    updateLog(("Notifying all users to remove: " + ((User) evt.getNewValue()).getUsername()));
                 }
 
             }
@@ -238,14 +241,17 @@ public class Server {
                         else {
                             //System.out.println("Socket not closed looping");
                             object = ois.readObject();
+                            oos.flush();
+                            System.out.println("Object is class of: " + object.getClass());
+
                         }
 
                         if(object instanceof User) {
-                            user = (User) object;
+                            user = ((User) object);
                             System.out.println("loop " +counter);
                             counter++;
 
-                            System.out.println("user: " + user.getUsername() + " status is: " + user.getStatus());
+                            System.out.println("user: " + ((User) object).getUsername() + " status is: " + ((User) object).getStatus());
                             if(user.getStatus() == 1){
                                 userlist.put(user,this);
                                 checkOfflineMessages(user);
@@ -259,6 +265,7 @@ public class Server {
 
                         }
                         else if(object instanceof TextMessage){
+                            System.out.println("text message found");
                             TextMessage message = (TextMessage) object;
                             notifyServer.firePropertyChange("New message",null,message);
 
@@ -267,10 +274,10 @@ public class Server {
 
                     } catch (IOException e) {
                        // updateLog(e.getMessage());
-                       // e.printStackTrace();
+                        e.printStackTrace();
                     } catch (ClassNotFoundException e) {
                        // updateLog(e.getMessage());
-                       // e.printStackTrace();
+                        e.printStackTrace();
                     }
 
 
@@ -356,6 +363,7 @@ public class Server {
             }
 
             public void removeUser(User offlineUser) {
+                System.out.println("Handlers telling their clients/users");
                 userlist.remove(offlineUser);
                 try {
                     oos.writeObject(offlineUser);
