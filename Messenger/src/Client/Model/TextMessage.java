@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * TextMessage Class implements Serializable
+ * @author Patrik Brandell
+ */
 public class TextMessage implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -15,7 +19,12 @@ public class TextMessage implements Serializable {
     private String timeRecieved;
 
 
-
+    /**
+     * New textmessage with 3 params
+     * @param message - String textmessage
+     * @param icon - Icon picture
+     * @param sender - User object as sender
+     */
     public TextMessage (String message, Icon icon, User sender) {
         this.message = message;
         this.icon = icon;
@@ -23,64 +32,94 @@ public class TextMessage implements Serializable {
 
 
     }
+
+    /**
+     * New textmessage with 2 params if only text
+     * @param message - String textmessage
+     * @param sender - User object as sender
+     */
     public TextMessage (String message, User sender) {
         this.message = message;
         this.sender = sender;
 
     }
 
-    public TextMessage (Icon icon) {
+    /**
+     * new textmessage with 2 params if only icon
+     * @param icon - Icon picture
+     * @param sender - User object as sender
+     */
+    public TextMessage (Icon icon, User sender) {
         this.icon = icon;
+        this.sender = sender;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
+    /**
+     *
+     * @return get current icon
+     */
     public Icon getIcon() {
         return icon;
     }
 
-    public void setIcon(Icon icon) {
-        this.icon = icon;
-    }
-
+    /**
+     *
+     * @return get current sender
+     */
     public User getSender() {
         return sender;
     }
 
-    public void setSender(User sender) {
-        this.sender = sender;
-    }
 
+    /**
+     *
+     * @return - ArrayList with User objects
+     */
     public ArrayList<User> getRecievers() {
         return recievers;
     }
 
-    public void setRecievers(ArrayList<User> recievers) {
-        this.recievers = recievers;
-    }
 
+    /**
+     *
+     * @param user - Add single User object to recieverlist
+     */
     public void addReciever(User user) {
         recievers.add(user);
     }
 
+    /**
+     *
+     * @return String time sent
+     */
     public String getTimeSent() {
         return timeSent;
     }
 
+    /**
+     *
+     * @param timeSent - set time sent
+     */
     public void setTimeSent(String timeSent) {
         this.timeSent = timeSent;
     }
 
+    /**
+     *
+     * @return - String of time recieved
+     */
     public String getTimeRecieved() {
         return timeRecieved;
     }
 
+    /**
+     *
+     * @param timeRecieved - set Timerecieved as String
+     */
     public void setTimeRecieved(String timeRecieved) {
         this.timeRecieved = timeRecieved;
     }
