@@ -5,6 +5,7 @@ import Client.Controller.Controller;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 //
 public class Client {
@@ -13,16 +14,16 @@ public class Client {
     private Socket socket;
     private ObjectOutputStream oos;
     private ObjectInputStream ois;
-    private User user;
+    private User myUser;
     private Controller controller;
     private Contacts contacts;
     private ArrayList<User> onlineUsers = new ArrayList<>();
     private Boolean flag;
 
-    public Client(String ip, int port, User user, Controller controller) {
+    public Client(String ip, int port, User myUser, Controller controller) {
         this.ip = ip;
         this.port = port;
-        this.user = user;
+        this.myUser = myUser;
         this.controller = controller;
         contacts = new Contacts();
         flag = true;
@@ -35,9 +36,9 @@ public class Client {
         try {
             System.out.println("Connecting");
             socket = new Socket(ip, port);
-            user.setStatus(1);
+            myUser.setStatus(1);
             oos = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-            oos.writeObject(user);
+            oos.writeObject(myUser);
 
             oos.flush();
             ois = new ObjectInputStream(new BufferedInputStream (socket.getInputStream()));
@@ -53,23 +54,26 @@ public class Client {
     }
 
     public void sendMessage(TextMessage message) throws IOException {
+        System.out.println("Reciever size: " + message.getRecievers());
         oos.writeObject(message);
         oos.flush();
     }
 
     public void disconnect() {
-        while (user.getStatus() == 1) {
-            user.setStatus(0);
-            try {
-                oos.writeObject(user);
-                oos.flush();
-                socket.close();
-                flag = false;
+        System.out.println("Disconnecting");
+
+        myUser.setStatus(0);
+        try {
+            System.out.println("Sending: " + myUser.getUsername() + " status: " + myUser.getStatus());
+            oos.writeObject(myUser);
+            oos.flush();
+            socket.close();
+            flag = false;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-    }
+
 
     public void addContact(User user) {
         contacts.addContact(user);
@@ -90,24 +94,31 @@ public class Client {
 
 
 
-    public void addOnlineUser(User user) {
-        System.out.println(this.user.getUsername());
-        System.out.println(user.getUsername());
+    public synchronized void addOnlineUser(User user) {
+        System.out.println("running addOnline");
         if(!onlineUsers.contains(user)) {
-            if (!this.user.getUsername().equals(user.getUsername())) {
+            if (!this.myUser.getUsername().equals(user.getUsername())) {
                 onlineUsers.add(user);
+                System.out.println("Adding: " + this.myUser.getUsername() + " to online list");
             }
         }
 
         controller.setUpOnlineUsersGUI(onlineUsers);
     }
 
-    public void removeOfflineUser(User user) {
-        for (User u : onlineUsers) {
-            if (u == user) {
-                onlineUsers.remove(u);
+    public synchronized void removeOfflineUser(User user) {
+        ListIterator<User> list = onlineUsers.listIterator();
+        while(list.hasNext()){
+            User nextUser = list.next();
+            System.out.println("Loops. next is: " + nextUser.getUsername() + " comparing with: " + user.getUsername());
+            if (nextUser.getUsername().equals(user.getUsername())) {
+                System.out.println("Removing: " + nextUser);
+                list.remove();
+
             }
         }
+        controller.setUpOnlineUsersGUI(onlineUsers);
+
     }
 
     public void checkContactOnline(User user) {
@@ -124,17 +135,36 @@ public class Client {
                 try {
 
                     Object object = ois.readObject();
+                    System.out.println(this.getName() + " somehing came through");
 
                     if (object instanceof User) {
-                        User user = (User) object;
-                        System.out.println("CLient recieved: " + ((User) object).getUsername());
+                        //Om denna använderen är null skapa min användare
 
-                        if(user.getStatus()== 1){
-                            addOnlineUser(user);
+                        if(myUser.getUsername().equals(((User) object).getUsername())){
+                            System.out.println(this.getName() + "This is about my user. Do something");
+                            setMyUser(((User) object));
+
+                            if(myUser.getStatus() == 0){
+                                System.out.println(this.getName() + " logged out. Remove them");
+                                removeOfflineUser(myUser);
+                            }
                         }
-                        else if(user.getStatus()== 0){
-                            removeOfflineUser(user);
+
+
+                        else {
+                            User user = ((User) object);
+                            System.out.println(this.getName() + "This is about someone else : " + user.getUsername());
+                            if(user.getStatus()== 1){
+                                System.out.println(this.getName() + "Adding: " + ((User) object).getUsername() + " to onlinelist");
+                                addOnlineUser(user);
+                            }
+                            else if(user.getStatus()== 0){
+                                System.out.println(this.getName() + "Removing: " + ((User) object).getUsername() + " from onlinelist");
+                                removeOfflineUser(user);
+                            }
                         }
+
+
 
                     }
 
@@ -149,9 +179,11 @@ public class Client {
                     }
 
                 } catch (IOException e) {
+                    System.out.println("Thread found error: " + this.getName());
                     e.printStackTrace();
 
                 } catch (ClassNotFoundException e) {
+                    System.out.println("Thread found error: " + this.getName());
                     e.printStackTrace();
                 }
 
@@ -160,5 +192,14 @@ public class Client {
 
             }
         }
+
+    }
+
+    public User getMyUser() {
+        return myUser;
+    }
+
+    public void setMyUser(User user) {
+        this.myUser = user;
     }
 }
