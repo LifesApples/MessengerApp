@@ -4,10 +4,14 @@ import Client.Controller.Controller;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
-//
+/**
+ * Client Class controls connections to server
+ * @author Patrik Brandell
+ */
 public class Client {
     private String ip;
     private int port;
@@ -20,6 +24,14 @@ public class Client {
     private ArrayList<User> onlineUsers = new ArrayList<>();
     private Boolean flag;
 
+    /**
+     *
+     * @param ip - IP to server
+     * @param port - Port to server
+     * @param user - Logged in user
+     * @param controller - Controller
+     */
+
     public Client(String ip, int port, User myUser, Controller controller) {
         this.ip = ip;
         this.port = port;
@@ -30,6 +42,10 @@ public class Client {
         Connect();
 
     }
+
+    /**
+     * Connect to server
+     */
 
     public void Connect()
     {
@@ -44,14 +60,16 @@ public class Client {
             ois = new ObjectInputStream(new BufferedInputStream (socket.getInputStream()));
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            controller.sendGUIerror("Could not connect to server");
-        }
-
+        } catch (IOException e) {}
         new Listener().start();
 
     }
+
+    /**
+     *
+     * @param message - Messageobject to send to server
+     * @throws IOException
+     */
 
     public void sendMessage(TextMessage message) throws IOException {
         System.out.println("Reciever size: " + message.getRecievers());
@@ -59,6 +77,10 @@ public class Client {
         oos.flush();
     }
 
+    /**
+     * Disconnect from server
+     * set userstatus to 0
+     */
     public void disconnect() {
         System.out.println("Disconnecting");
 
@@ -70,29 +92,39 @@ public class Client {
             socket.close();
             flag = false;
             } catch (IOException e) {
-                e.printStackTrace();
             }
         }
 
 
+    /**
+     *
+     * @param user - User object to add to contacts
+     */
     public void addContact(User user) {
         contacts.addContact(user);
     }
 
-
+    /**
+     *
+     * @return contacts class
+     */
     public Contacts getContacts() {
         return contacts;
     }
 
-    public void setContacts(Contacts contacts) {
-        this.contacts = contacts;
-    }
-
+    /**
+     *
+     * @return Arraylist of User objects
+     */
     public ArrayList<User> getOnlineUsers() {
         return onlineUsers;
     }
 
 
+    /**
+     *
+     * @param user - Add User object to onlinelist, recieved from server
+     */
 
     public synchronized void addOnlineUser(User user) {
         System.out.println("running addOnline");
@@ -105,7 +137,12 @@ public class Client {
 
         controller.setUpOnlineUsersGUI(onlineUsers);
     }
-
+  
+   /**
+     *
+     * @param user - Remove user object from onlinelist if recieved as disconnected from server
+     */
+  
     public synchronized void removeOfflineUser(User user) {
         ListIterator<User> list = onlineUsers.listIterator();
         while(list.hasNext()){
@@ -115,19 +152,17 @@ public class Client {
                 System.out.println("Removing: " + nextUser);
                 list.remove();
 
+
             }
         }
         controller.setUpOnlineUsersGUI(onlineUsers);
 
     }
 
-    public void checkContactOnline(User user) {
-        for (User u : contacts.getContactlist()) {
-            if (u.getUsername().equals(user.getUsername())) {
-                //controller set online
-            }
-        }
-    }
+
+    /**
+     * Inner Class Listener extends Thread - Listener from server
+     */
     public class Listener extends Thread {
         public synchronized void run() {
             while(flag) {
@@ -173,12 +208,9 @@ public class Client {
                         System.out.println("Text message recieved!");
                     }
 
-                    if (object instanceof String) {
-                        controller.sendGUIerror((String) object);
-                        //Send String to controller (server messages)
-                    }
 
                 } catch (IOException e) {
+
                     System.out.println("Thread found error: " + this.getName());
                     e.printStackTrace();
 

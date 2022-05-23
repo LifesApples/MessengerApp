@@ -3,6 +3,7 @@ package Client.View;
 import Client.Controller.Controller;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -73,7 +74,7 @@ public class ContactPanel extends JPanel implements ActionListener {
         listPanel.setName("Contacts");
         listPanel.add(m);
         listPanel.add(o);
-        listPanel.setBounds(0, 0, width - 40, height - 40);
+        listPanel.setBounds(0, 20, width - 40, height - 40);
 
         buttonPanel = new JPanel(new GridLayout(2,3));
         buttonPanel.add(btnAddContact);
@@ -113,6 +114,10 @@ public class ContactPanel extends JPanel implements ActionListener {
 
     public void updateMyContacts(String[] list) {
         myContacts.setListData(list);
+    }
+
+    public void setBorder(String username) {
+        mainPanel.setBorder(BorderFactory.createTitledBorder(username));
     }
 
     public JList getOnlineUsers() {

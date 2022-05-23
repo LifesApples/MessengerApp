@@ -1,9 +1,13 @@
 package Client.Model;
 
-import Client.Controller.Controller;
 
 import java.io.*;
 import java.util.ArrayList;
+
+/**
+ * Class Contacts handles contact list och file
+ * @author Patrik Brandell
+ */
 
 public class Contacts {
 
@@ -11,6 +15,10 @@ public class Contacts {
     private ArrayList<User> contactlist;
     private File contactfile;
 
+
+    /**
+     * Contacts constructor checks for contactfile, create if it doesn't exist
+     */
     public Contacts() {
         contactlist = new ArrayList<>();
         contactfile = new File("files/contacts.dat");
@@ -33,6 +41,11 @@ public class Contacts {
         }
     }
 
+    /**
+     * Reads contactfile from disk
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void readContactfile() throws IOException, ClassNotFoundException {
         try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(contactfile)))) {
             int n = ois.readInt();
@@ -44,6 +57,11 @@ public class Contacts {
         }
 
     }
+
+    /**
+     * Writes to contactfile
+     * @throws IOException
+     */
 
     public void writeContactfile() throws IOException {
         try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(contactfile)))) {
@@ -59,10 +77,10 @@ public class Contacts {
         return contactlist;
     }
 
-    public void setContactlist(ArrayList<User> contactlist) {
-        this.contactlist = contactlist;
-    }
-
+    /**
+     *
+     * @param user - Add User object to contactlist if it doesn't exist
+     */
     public void addContact(User user) {
         Boolean exist = false;
         for (User u : contactlist) {
@@ -79,6 +97,10 @@ public class Contacts {
         }
     }
 
+    /**
+     *
+     * @param user - Remove User object from contactlist
+     */
     public void removeContact(User user) {
         User userToRemove = null;
         for (User u : contactlist) {
