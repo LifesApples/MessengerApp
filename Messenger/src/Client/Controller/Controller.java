@@ -164,6 +164,11 @@ public class Controller {
         setUpContactsGUI();
     }
 
+    /**
+     * Method to append TextMessages in Gui. If group chat sort away yourself and remove duplicate recievers
+     * @param obj message object
+     */
+
     public void appendTextMessageGUI(Object obj) {
         if (obj instanceof TextMessage) {
 
@@ -174,7 +179,14 @@ public class Controller {
             //mainFrame.appendTextMessageGUI(((TextMessage) obj).getTimeSent());
             if (((TextMessage) obj).getRecievers().size() > 1) {
                 for (User u :((TextMessage) obj).getRecievers()) {
-                    mainFrame.getMainPanel().setRecievers(u.getUsername());
+                    for (int i = 0; i < mainFrame.getMainPanel().getRecievers().size(); i++) {
+                        if (mainFrame.getMainPanel().getRecievers().get(i).equals(u.getUsername())) {
+                            mainFrame.getMainPanel().removeReciever(i);
+                        }
+                    }
+                    if (!u.getUsername().equals(getMyUser().getUsername())) {
+                        mainFrame.getMainPanel().setRecievers(u.getUsername());
+                    }
                 }
 
             }

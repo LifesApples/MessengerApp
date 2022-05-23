@@ -62,7 +62,7 @@ public class MainFrame extends JFrame {
             mainPanel = new MainPanel(width, height, controller, obj);
             mainPanel.setIcon(controller.getMyUser().getIcon());
         }
-
+        
         mainPanel.addMessage(obj);
     }
 

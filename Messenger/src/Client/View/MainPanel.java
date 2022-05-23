@@ -135,7 +135,10 @@ public class MainPanel extends JFrame implements ActionListener {
         this.username = username;
     }
 
+    public void removeReciever(int index) {
+        recievers.remove(index);
 
+    }
 
     public void setRecievers(String reciever) {
         this.recievers.add(reciever);
