@@ -53,12 +53,16 @@ public class MainPanel extends JFrame implements ActionListener {
         mainPanel.add(chatWindow);
         mainPanel.add(textWindow);
         mainPanel.add(profilePic);
+        mainPanel.add(contactProfilePic);
 
         mainPanel.setBounds(0, 0, width, height);
 
         setVisible(true);
         setContentPane(mainPanel);
         setBackground(Color.PINK);
+        for (String str : this.recievers) {
+            System.out.println(str);
+        }
 
     }
 
@@ -93,6 +97,10 @@ public class MainPanel extends JFrame implements ActionListener {
         setVisible(true);
         setContentPane(mainPanel);
         setBackground(Color.PINK);
+
+        for (String str : recievers) {
+            System.out.println(str);
+        }
 
     }
 
@@ -167,6 +175,7 @@ public class MainPanel extends JFrame implements ActionListener {
 
     public void setContactIcon(Icon icon) {
         contactProfilePic.setIcon(icon);
+
     }
 
     @Override

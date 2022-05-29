@@ -83,6 +83,7 @@ public class Controller {
                 }
             }
         }
+
     }
 
 
@@ -90,14 +91,15 @@ public class Controller {
         TextMessage m = new TextMessage(message, myUser);
         for (User u : client.getOnlineUsers())
             for (String r : recievers) {
-                if (u.getUsername().equals(r)) {
+
+                if (u.getUsername().equals(r) && !r.equals(myUser.getUsername())) {
                     m.addReciever(u);
                 }
             }
 
-        for (User u : client.getContacts().getContactlist())
+        for (User u : client.getContacts().getContactlist() )
             for (String r : recievers) {
-                if (u.getUsername().equals(r)) {
+                if (u.getUsername().equals(r) && !r.equals(myUser.getUsername())) {
                     m.addReciever(u);
                 }
             }
@@ -118,15 +120,16 @@ public class Controller {
         for (User u : client.getOnlineUsers()) {
             for (String r : recievers) {
                 System.out.println(r);
-                if (u.getUsername().equals(r)) {
-                    m.addReciever(u);
+                if (u.getUsername().equals(r) && !r.equals(myUser.getUsername())) {
+                        m.addReciever(u);
+                    }
 
-                }
+
             }
         }
         for (User u : client.getContacts().getContactlist())
             for (String r : recievers) {
-                if (u.getUsername().equals(r)) {
+                if (u.getUsername().equals(r) && !r.equals(myUser.getUsername())) {
                     m.addReciever(u);
                 }
             }
