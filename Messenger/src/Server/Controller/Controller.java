@@ -13,7 +13,7 @@ public class Controller {
 
 
     public Controller() throws IOException {
-        mainFrame = new MainFrame(600,600, this);
+        mainFrame = new MainFrame(1200,600, this);
         server = new Server(2343, this);
 
 

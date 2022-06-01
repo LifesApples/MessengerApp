@@ -126,9 +126,7 @@ public class TextMessage implements Serializable {
 
     @Override
     public String toString() {
-        String text = timeSent +  '\''  +
-                " Sender: " + sender + " Message: " + message +
-                " Reciever: " + getRecievers().toString();
+        String text = timeSent +" Sender: " + sender.getUsername() + " Message: " + message;
 
         return text;
     }

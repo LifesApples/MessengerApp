@@ -26,7 +26,7 @@ public class MainFrame extends JFrame {
 
     }
 
-    public void updateLog(String logMessage) {
+    public synchronized void updateLog(String logMessage) {
         logPanel.updateLog(logMessage);
     }
 

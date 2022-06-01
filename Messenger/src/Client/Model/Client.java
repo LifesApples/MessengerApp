@@ -28,7 +28,7 @@ public class Client {
      *
      * @param ip - IP to server
      * @param port - Port to server
-     * @param user - Logged in user
+     * @param myUser - Logged in user
      * @param controller - Controller
      */
 
@@ -72,7 +72,6 @@ public class Client {
      */
 
     public void sendMessage(TextMessage message) throws IOException {
-        System.out.println("Reciever size: " + message.getRecievers());
         oos.writeObject(message);
         oos.flush();
     }
@@ -82,11 +81,9 @@ public class Client {
      * set userstatus to 0
      */
     public void disconnect() {
-        System.out.println("Disconnecting");
 
         myUser.setStatus(0);
         try {
-            System.out.println("Sending: " + myUser.getUsername() + " status: " + myUser.getStatus());
             oos.writeObject(myUser);
             oos.flush();
             socket.close();
@@ -127,11 +124,9 @@ public class Client {
      */
 
     public synchronized void addOnlineUser(User user) {
-        System.out.println("running addOnline");
         if(!onlineUsers.contains(user)) {
             if (!this.myUser.getUsername().equals(user.getUsername())) {
                 onlineUsers.add(user);
-                System.out.println("Adding: " + this.myUser.getUsername() + " to online list");
             }
         }
 
@@ -147,11 +142,8 @@ public class Client {
         ListIterator<User> list = onlineUsers.listIterator();
         while(list.hasNext()){
             User nextUser = list.next();
-            System.out.println("Loops. next is: " + nextUser.getUsername() + " comparing with: " + user.getUsername());
             if (nextUser.getUsername().equals(user.getUsername())) {
-                System.out.println("Removing: " + nextUser);
                 list.remove();
-
 
             }
         }
@@ -170,31 +162,24 @@ public class Client {
                 try {
 
                     Object object = ois.readObject();
-                    System.out.println(this.getName() + " somehing came through");
 
                     if (object instanceof User) {
-                        //Om denna använderen är null skapa min användare
-
+                        //If user object is my user
                         if(myUser.getUsername().equals(((User) object).getUsername())){
-                            System.out.println(this.getName() + "This is about my user. Do something");
                             setMyUser(((User) object));
 
                             if(myUser.getStatus() == 0){
-                                System.out.println(this.getName() + " logged out. Remove them");
                                 removeOfflineUser(myUser);
                             }
                         }
 
-
+                        //If user object is someoneelse
                         else {
                             User user = ((User) object);
-                            System.out.println(this.getName() + "This is about someone else : " + user.getUsername());
                             if(user.getStatus()== 1){
-                                System.out.println(this.getName() + "Adding: " + ((User) object).getUsername() + " to onlinelist");
                                 addOnlineUser(user);
                             }
                             else if(user.getStatus()== 0){
-                                System.out.println(this.getName() + "Removing: " + ((User) object).getUsername() + " from onlinelist");
                                 removeOfflineUser(user);
                             }
                         }
