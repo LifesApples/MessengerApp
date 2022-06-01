@@ -17,6 +17,7 @@ public class LogPanel extends JPanel implements ActionListener {
     private JTextField toDate;
     private JLabel toLabel;
     private JButton search;
+    private JScrollPane scrollPane;
     private DefaultListModel log = new DefaultListModel();
 
     public LogPanel(int width, int height, Controller controller) {
@@ -31,8 +32,10 @@ public class LogPanel extends JPanel implements ActionListener {
 
         resultWindow = new JList(log);
         resultWindow.setLocation(130, 55);
-        resultWindow.setSize(430, 350);
+        resultWindow.setSize(900, 350);
         add(resultWindow);
+        //scrollPane = new JScrollPane(resultWindow);
+        //add(scrollPane);
 
         fromLabel = new JLabel();
         fromLabel.setText("From");
@@ -65,12 +68,13 @@ public class LogPanel extends JPanel implements ActionListener {
     }
 
     public void setLog(DefaultListModel log) {
-        this.log = log;
-        resultWindow.setModel(log);
-        add(resultWindow);
+       // this.log = log;
+       // resultWindow.setModel(log);
+       // add(resultWindow);
     }
 
-    public void updateLog(String logMessage) {
+    public synchronized void updateLog(String logMessage) {
+        //System.out.println("Logpanel: " + logMessage );
         log.addElement(logMessage);
     }
 

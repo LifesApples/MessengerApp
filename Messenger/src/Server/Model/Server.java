@@ -25,22 +25,29 @@ public class Server {
     private ArrayList<LogEntry> log;
     private DefaultListModel<String> searchResults;
     private Controller controller;
+    private LogToFile logToFile;
+
 
     public Server(int port, Controller controller) throws IOException {
         this.port = port;
         this.controller = controller;
         log = new ArrayList<>();
+        logToFile = new LogToFile("files/logentries.dat");
         searchResults = new DefaultListModel<>();
         new Connect(port).start();
     }
 
-    public void updateLog(String logMessage){
+    public synchronized void updateLog(String logMessage){
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yy.MM.dd hh:mm");
         LogEntry entry = new LogEntry(sdf.format(date),logMessage);
         log.add(entry);
-        controller.updateLog(entry.toString());
+        logToFile.writeEntry(entry);
+        controller.updateLog(logToFile.readEntry());
     }
+
+
+
 
     public DefaultListModel<String> searchDates(String from, String to){
 
@@ -162,27 +169,38 @@ public class Server {
 
             else if(evt.getPropertyName().equals("New message")){
                 TextMessage message = (TextMessage) evt.getNewValue();
-                updateLog((message.toString()));
+                User sender = message.getSender();
+                updateLog("Time recieved: " + message.getTimeRecieved() + " Sender:  " + sender + " Message: " + message );
                 ArrayList<User> recievers =((TextMessage) evt.getNewValue()).getRecievers();
+                Boolean recieverIsOffline = true;
+                System.out.println("r size: " + recievers.size());
                 for(User reciever : recievers){
+                    System.out.println("Next to be sent to: " + reciever.getUsername());
                     for(var entry : userlist.keySet()){
-
                         String username = ((User) entry).getUsername();
-                        System.out.println("Checking if: " + username + " is in recieverlist");
-                        if(username.equals(reciever.getUsername())){
+                        System.out.println("Checking if: " + reciever.getUsername() + " is Online");
+                        if(reciever.getUsername().equals(username)){
+                            recieverIsOffline = false;
                             System.out.println("Username: " + username + " was found in recieverlist");
                             ClientHandler recipent = (ClientHandler) userlist.get(entry);
                             recipent.sendMessage(message);
                         }
-                        else{
-                            System.out.println("User not online");
-                            saveOfflineMessage(reciever.getUsername(), message);
 
+                    }
+                    if(recieverIsOffline){
+                        saveOfflineMessage(reciever.getUsername(), message);
+                    }
+/*
+                    for(var entry : userlist.keySet()){
+                        String username = ((User) entry).getUsername();
+                        if(username.equals(sender.getUsername())){
+                            ClientHandler handler = (ClientHandler) userlist.get(entry);
+                            handler.getUser();
                         }
+
                     }
 
-
-
+ */
                 }
             }
 
@@ -190,14 +208,14 @@ public class Server {
 
         private void saveOfflineMessage(String username, TextMessage message) {
             if(!offlineMessages.containsKey(username)){
-                updateLog("User : " + username + "has no saved messages");
+                updateLog("User : " + username + " has no previous saved messages. Saving offline message in a list");
                 ArrayList<TextMessage> messageList = new ArrayList();
                 messageList.add(message);
                 offlineMessages.put(username,messageList);
             }
             else {
                 //get messagelist for user and add messages
-                updateLog("User: " + username + " is offline. Saving messages ");
+                updateLog("User: " + username + " is offline. adding to offline message list ");
                 ArrayList<TextMessage> messageList = (ArrayList<TextMessage>) offlineMessages.get(username);
                 messageList.add(message);
             }
@@ -254,9 +272,8 @@ public class Server {
                             System.out.println("user: " + ((User) object).getUsername() + " status is: " + ((User) object).getStatus());
                             if(user.getStatus() == 1){
                                 userlist.put(user,this);
-                                checkOfflineMessages(user);
                                 notifyServer.firePropertyChange("New user",null,user);
-
+                                checkOfflineMessages(user.getUsername());
                             }
                             else if (user.getStatus() == 0){
                                 System.out.println("Found status 0");
@@ -267,6 +284,9 @@ public class Server {
                         else if(object instanceof TextMessage){
                             System.out.println("text message found");
                             TextMessage message = (TextMessage) object;
+                            Date date = new Date();
+                            SimpleDateFormat sdf = new SimpleDateFormat("yy.MM.dd hh:mm");
+                            message.setTimeRecieved(sdf.format(date));
                             notifyServer.firePropertyChange("New message",null,message);
 
                         }
@@ -312,6 +332,9 @@ public class Server {
 
             public void sendMessage(TextMessage message){
                 try {
+                    Date date = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yy.MM.dd hh:mm");
+                    message.setTimeSent(sdf.format(date));
                     oos.writeObject(message);
                     oos.flush();
                 } catch (IOException e) {
@@ -320,44 +343,57 @@ public class Server {
                 }
             }
 
-            public void checkOfflineMessages(User user){
+            public void checkOfflineMessages(String username){
                 updateLog("Checking offline messages for: " + user.getUsername());
-                User Ali = new User("Ali");
-                ArrayList<TextMessage> alisMessages = new ArrayList<>();
-                alisMessages.add(new TextMessage("1.Detta är ett test",Ali));
-                alisMessages.add(new TextMessage("2.Även detta",Ali));
-                offlineMessages.put(Ali, alisMessages);
-                //offlineMessages.put(new User("Ali").getUsername(),new ArrayList<String>().add("Detta är ett test"));
 
-                for(int i = 0; i<offlineMessages.size(); i++){
-                    for (var nextUser : offlineMessages.keySet()){
-                        User offlineUser = (User) nextUser;
-                        if(offlineUser.getUsername().equals(user.getUsername())){
-                            updateLog("User: " +offlineUser.getUsername() + " has offline messages");
-                            updateLog("Loading offline messages");
-                            ArrayList<TextMessage> messagelist = (ArrayList<TextMessage>) offlineMessages.get(offlineUser);
-                            for(int j = 0; j<messagelist.size(); j++){
-                                //Use sendMessage method instead
-                                sendMessage(messagelist.get(j));
-                                updateLog("Message: " + messagelist.get(j));
+                if(offlineMessages.containsKey(username)){
+                    updateLog("Loading saved messages for: " + username);
+                    ArrayList<TextMessage> messagelist = (ArrayList<TextMessage>) offlineMessages.get(username);
+                    for(int j = 0; j<messagelist.size(); j++){
+                        sendMessage(messagelist.get(j));
+                        //updateLog("OfflineMessage: " + messagelist.get(j));
+                    }
+                    offlineMessages.remove(username);
+                }
+                else {
+                    updateLog("No saved messages");
+                }
+
+                /*
+                else{
+                    for(int i = 0; i<offlineMessages.size(); i++){
+                        for (var nextUser : offlineMessages.keySet()){
+                            System.out.println("list offline messages is: " + offlineMessages.size());
+                            User offlineUser = (User) nextUser;
+                            if(offlineUser.getUsername().equals(user.getUsername())){
+                                updateLog("User: " +offlineUser.getUsername() + " has offline messages");
+                                updateLog("Loading offline messages");
+                                ArrayList<TextMessage> messagelist = (ArrayList<TextMessage>) offlineMessages.get(offlineUser);
+                                for(int j = 0; j<messagelist.size(); j++){
+                                    sendMessage(messagelist.get(j));
+                                    updateLog("Message: " + messagelist.get(j));
+                                }
+
+
+                                try {
+                                    oos.writiteObject(offlineMessages);
+                                    oos.flush();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
                             }
-
-
-                            try {
-                                oos.writeObject(offlineMessages);
-                                oos.flush();
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                            else {
+                                updateLog("User: " + offlineUser + " has no offline messages");
                             }
 
                         }
-                        else {
-                            updateLog("User: " + user.getUsername() + " has no offline messages");
-                        }
+
 
                     }
-
                 }
+                */
+
 
 
             }
