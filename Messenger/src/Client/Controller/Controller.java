@@ -145,7 +145,7 @@ public class Controller {
                 }
             }
         }
-
+        m.removeDuplicateRecievers();
         mainFrame.appendTextMessageGUI(m.getSender().getUsername() + ":");
         mainFrame.appendTextMessageGUI(m.getIcon());
         mainFrame.appendTextMessageGUI(m.getMessage());
