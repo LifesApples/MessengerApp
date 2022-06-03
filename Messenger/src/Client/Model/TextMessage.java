@@ -83,6 +83,18 @@ public class TextMessage implements Serializable {
         return recievers;
     }
 
+    /**
+     * clear list of duplicate names
+     */
+    public void removeDuplicateRecievers() {
+        for (int i = 0; i < recievers.size()-1; i++) {
+            for (int j = i+1; j < recievers.size(); j++) {
+                if (recievers.get(i).getUsername().equals(recievers.get(j).getUsername())) {
+                    removeReciever(j);
+                }
+            }
+        }
+    }
 
     /**
      *
@@ -90,6 +102,14 @@ public class TextMessage implements Serializable {
      */
     public void addReciever(User user) {
         recievers.add(user);
+    }
+
+    /**
+     * Remove single reciever
+     * @param index in array
+     */
+    public void removeReciever (int index) {
+        recievers.remove(index);
     }
 
     /**

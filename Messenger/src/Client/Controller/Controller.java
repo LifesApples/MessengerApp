@@ -83,25 +83,34 @@ public class Controller {
                 }
             }
         }
+
     }
 
-
+    /**
+     * Send only text as message to recievers
+     * @param message String message to send
+     * @param recievers ArrayList<String> of recievers
+     */
     public void sendMessage(String message, ArrayList<String> recievers) {
+
         TextMessage m = new TextMessage(message, myUser);
         for (User u : client.getOnlineUsers())
             for (String r : recievers) {
-                if (u.getUsername().equals(r)) {
+                if (u.getUsername().equals(r) && !r.equals(myUser.getUsername())) {
+                    System.out.println("ONLINE USER ADDED " + u.getUsername());
                     m.addReciever(u);
                 }
             }
 
-        for (User u : client.getContacts().getContactlist())
+        for (User u : client.getContacts().getContactlist()) {
             for (String r : recievers) {
-                if (u.getUsername().equals(r)) {
+                if (u.getUsername().equals(r) && !r.equals(myUser.getUsername())) {
+                    System.out.println("contact added " + u.getUsername());
                     m.addReciever(u);
                 }
             }
-
+        }
+        m.removeDuplicateRecievers();
 
         mainFrame.appendTextMessageGUI(m.getSender().getUsername()+ ":");
         mainFrame.appendTextMessageGUI(m.getMessage());
@@ -111,25 +120,32 @@ public class Controller {
             e.printStackTrace();
         }
 
-
     }
+
+    /**
+     * Send text and picture as a message to recievers
+     * @param message - textmessage as String
+     * @param path - Path to picture
+     * @param recievers - ArrayList<String> of recievers
+     */
     public void sendMessage(String message, String path, ArrayList<String> recievers) {
         TextMessage m = new TextMessage(message, new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(30,30, Image.SCALE_DEFAULT)), myUser);
         for (User u : client.getOnlineUsers()) {
             for (String r : recievers) {
                 System.out.println(r);
-                if (u.getUsername().equals(r)) {
-                    m.addReciever(u);
-
+                if (u.getUsername().equals(r) && !r.equals(myUser.getUsername())) {
+                        m.addReciever(u);
                 }
             }
         }
-        for (User u : client.getContacts().getContactlist())
+        for (User u : client.getContacts().getContactlist()) {
             for (String r : recievers) {
-                if (u.getUsername().equals(r)) {
-                    m.addReciever(u);
+                if (u.getUsername().equals(r) && !r.equals(myUser.getUsername())) {
+                        m.addReciever(u);
                 }
             }
+        }
+
         mainFrame.appendTextMessageGUI(m.getSender().getUsername() + ":");
         mainFrame.appendTextMessageGUI(m.getIcon());
         mainFrame.appendTextMessageGUI(m.getMessage());
@@ -197,6 +213,7 @@ public class Controller {
                         if (mainFrame.getMainPanel().getRecievers().get(i).equals(u.getUsername())) {
                             mainFrame.getMainPanel().removeReciever(i);
                         }
+
                     }
                     if (!u.getUsername().equals(getMyUser().getUsername())) {
                         mainFrame.getMainPanel().setRecievers(u.getUsername());
