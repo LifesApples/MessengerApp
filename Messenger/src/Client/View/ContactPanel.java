@@ -95,10 +95,7 @@ public class ContactPanel extends JPanel implements ActionListener {
 
     }
 
-    public void setContactOnline(int index) {
-        myContacts.setSelectedIndex(index);
-        myContacts.setSelectionForeground(Color.GREEN);
-    }
+
     public int getOnlineUsersIndex() {
         return onlineUsers.getSelectedIndex();
     }
