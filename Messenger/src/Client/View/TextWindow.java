@@ -10,7 +10,7 @@ public class TextWindow extends JTextArea {
     private Controller controller;
 
 
-    public TextWindow(int width, int height, Controller controller, String username) {
+    public TextWindow(Controller controller, String username) {
         this.username = username;
         this.controller = controller;
         setSize(435, 150);

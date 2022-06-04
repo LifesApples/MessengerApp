@@ -30,7 +30,6 @@ public class TextMessage implements Serializable {
         this.icon = icon;
         this.sender = sender;
 
-
     }
 
     /**
@@ -44,15 +43,7 @@ public class TextMessage implements Serializable {
 
     }
 
-    /**
-     * new textmessage with 2 params if only icon
-     * @param icon - Icon picture
-     * @param sender - User object as sender
-     */
-    public TextMessage (Icon icon, User sender) {
-        this.icon = icon;
-        this.sender = sender;
-    }
+
 
     public String getMessage() {
         return message;

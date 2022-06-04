@@ -38,7 +38,7 @@ public class MainPanel extends JFrame implements ActionListener {
         initiateChatWindow();
 
 
-        textWindow = new TextWindow(width, height, controller, username);
+        textWindow = new TextWindow(controller, username);
 
         profilePic = new JLabel(new ImageIcon());
         profilePic.setBounds(450, 400, 100, 100);
@@ -75,7 +75,7 @@ public class MainPanel extends JFrame implements ActionListener {
         initiateChatWindow();
         recievers.add((String) object);
 
-        textWindow = new TextWindow(width, height, controller, (String)object);
+        textWindow = new TextWindow(controller, (String)object);
 
         profilePic = new JLabel(new ImageIcon());
         profilePic.setBounds(450, 400, 100, 100);

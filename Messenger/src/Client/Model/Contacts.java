@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 public class Contacts {
 
-    private final String filename = "contacts";
     private ArrayList<User> contactlist;
     private File contactfile;
 

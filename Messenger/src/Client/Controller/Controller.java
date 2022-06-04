@@ -17,14 +17,12 @@ import java.util.ArrayList;
 public class Controller {
     private MainFrame mainFrame;
     private LoginPage lp;
-    private Server server;
     private Client client;
-    private User myUser, contactUser;
+    private User myUser;
 
 
     public Controller() throws IOException {
 
-        //server = new Server(2343);
         lp = new LoginPage(this);
         mainFrame = new MainFrame( 600,600, this);
 
