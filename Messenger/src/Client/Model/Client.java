@@ -124,7 +124,13 @@ public class Client {
      */
 
     public synchronized void addOnlineUser(User user) {
-        if(!onlineUsers.contains(user)) {
+        boolean exist = false;
+        for (int i = 0; i< onlineUsers.size(); i++) {
+            if (onlineUsers.get(i).getUsername().equals(user.getUsername())) {
+                exist = true;
+            }
+        }
+        if(!exist) {
             if (!this.myUser.getUsername().equals(user.getUsername())) {
                 onlineUsers.add(user);
             }
