@@ -157,12 +157,12 @@ public class Server {
                             e.printStackTrace();
                         }
                     }
-                    updateLog(((User) evt.getNewValue()).getUsername() + " logged out");
+
 
                 }
+                updateLog(((User) evt.getNewValue()).getUsername() + " logged out");
                 for(int i = 0; i<handlers.size(); i++){
                     handlers.get(i).removeUser((User) evt.getNewValue());
-                    updateLog(("Notifying all users to remove: " + ((User) evt.getNewValue()).getUsername()));
                 }
 
             }

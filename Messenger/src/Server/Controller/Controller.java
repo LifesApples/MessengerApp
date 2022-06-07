@@ -19,17 +19,6 @@ public class Controller {
 
     }
 
-    public void signIn(String username) {
-      //  User user = new User(username);
-       // client = new Client("127.0.0.1",2343, user);
-        //mainFrame = new MainFrame( 600,600, this, user.getUsername());
-
-    }
-
-    public void sendMessage(String message, String username) {
-        System.out.println(username + " said: " + message);
-    }
-
     public void updateLog(String logmessage) {
         mainFrame.updateLog(logmessage);
     }
