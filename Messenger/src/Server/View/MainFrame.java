@@ -21,7 +21,6 @@ public class MainFrame extends JFrame {
         logPanel = new LogPanel(width, height, controller);
         setContentPane(logPanel);
         setVisible(true);
-        //   setBackground(Color.BLACK);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }

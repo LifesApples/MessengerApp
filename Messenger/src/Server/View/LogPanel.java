@@ -68,9 +68,9 @@ public class LogPanel extends JPanel implements ActionListener {
     }
 
     public void setLog(DefaultListModel log) {
-       // this.log = log;
-       // resultWindow.setModel(log);
-       // add(resultWindow);
+        //this.log = log;
+        resultWindow.setModel(log);
+        add(resultWindow);
     }
 
     public synchronized void updateLog(String logMessage) {

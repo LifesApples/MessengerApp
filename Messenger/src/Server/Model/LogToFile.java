@@ -12,13 +12,13 @@ public class LogToFile {
     }
 
 
-    public String readEntry() {
+    public LogEntry readEntry() {
         LogEntry entry;
         try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
             entry = (LogEntry) ois.readObject();
 
-            System.out.println("Reading: " + entry.getEntry());
-            return entry.getEntry();
+            System.out.println("Reading: " + entry);
+            return entry;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -26,9 +26,11 @@ public class LogToFile {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return "Could not read from file";
+        return null;
     }
         public void writeEntry(LogEntry logEntry) {
+            System.out.println("Saving entry: " + logEntry);
+
         try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
                 oos.writeObject(logEntry);
                 oos.flush();
