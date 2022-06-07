@@ -31,11 +31,13 @@ public class LogPanel extends JPanel implements ActionListener {
 
 
         resultWindow = new JList(log);
-        resultWindow.setLocation(130, 55);
-        resultWindow.setSize(900, 350);
-        add(resultWindow);
-        //scrollPane = new JScrollPane(resultWindow);
-        //add(scrollPane);
+
+        scrollPane = new JScrollPane(resultWindow);
+        scrollPane.setLocation(130, 55);
+        scrollPane.setSize(900, 350);
+        add(scrollPane);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         fromLabel = new JLabel();
         fromLabel.setText("From");

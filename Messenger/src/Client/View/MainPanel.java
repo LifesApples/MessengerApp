@@ -75,7 +75,7 @@ public class MainPanel extends JFrame implements ActionListener {
         initiateChatWindow();
         recievers.add((String) object);
 
-        textWindow = new TextWindow(controller, (String)object);
+        textWindow = new TextWindow(controller, (String) object);
 
         profilePic = new JLabel(new ImageIcon());
         profilePic.setBounds(450, 400, 100, 100);
@@ -97,11 +97,6 @@ public class MainPanel extends JFrame implements ActionListener {
         setVisible(true);
         setContentPane(mainPanel);
         setBackground(Color.PINK);
-
-        for (String str : recievers) {
-            System.out.println(str);
-        }
-
     }
 
 

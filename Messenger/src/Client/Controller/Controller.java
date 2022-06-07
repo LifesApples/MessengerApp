@@ -95,7 +95,7 @@ public class Controller {
         for (User u : client.getOnlineUsers())
             for (String r : recievers) {
                 if (u.getUsername().equals(r) && !r.equals(myUser.getUsername())) {
-                    System.out.println("ONLINE USER ADDED " + u.getUsername());
+
                     m.addReciever(u);
                 }
             }
@@ -103,7 +103,7 @@ public class Controller {
         for (User u : client.getContacts().getContactlist()) {
             for (String r : recievers) {
                 if (u.getUsername().equals(r) && !r.equals(myUser.getUsername())) {
-                    System.out.println("contact added " + u.getUsername());
+
                     m.addReciever(u);
                 }
             }

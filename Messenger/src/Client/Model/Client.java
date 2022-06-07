@@ -196,12 +196,8 @@ public class Client {
 
                 } catch (IOException e) {
 
-                    System.out.println("Thread found error: " + this.getName());
-                    e.printStackTrace();
 
                 } catch (ClassNotFoundException e) {
-                    System.out.println("Thread found error: " + this.getName());
-                    e.printStackTrace();
                 }
 
 
