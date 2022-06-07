@@ -7,6 +7,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
+/**
+ * This class is used for creating the window used for the logs. The class communicates with the controller class
+ * for passing information. Searchresults are also updated here when searching between two points in time.
+ */
 public class LogPanel extends JPanel implements ActionListener {
     private int width;
     private int height;
@@ -70,13 +75,11 @@ public class LogPanel extends JPanel implements ActionListener {
     }
 
     public void setLog(DefaultListModel log) {
-        //this.log = log;
         resultWindow.setModel(log);
         add(resultWindow);
     }
 
     public synchronized void updateLog(String logMessage) {
-        //System.out.println("Logpanel: " + logMessage );
         log.addElement(logMessage);
     }
 

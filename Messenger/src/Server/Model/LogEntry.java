@@ -8,6 +8,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * Class used for creating entries for the log. The entries are created with a String object as the message and dates.
+ */
 public class LogEntry implements Serializable{
     private String date;
     private String entry;
@@ -22,26 +25,11 @@ public class LogEntry implements Serializable{
        return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
 
     public String getEntry() {
         return entry;
     }
 
-    public void setEntry(String entry) {
-        this.entry = entry;
-    }
-
-
-    public File getFile() {
-        return file;
-    }
-
-    public void setFile(File file) {
-        this.file = file;
-    }
 
     @Override
     public String toString() {
