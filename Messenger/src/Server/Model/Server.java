@@ -41,9 +41,10 @@ public class Server {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yy.MM.dd hh:mm");
         LogEntry entry = new LogEntry(sdf.format(date),logMessage);
+        System.out.println("Datum: " + entry);
         log.add(entry);
         logToFile.writeEntry(entry);
-        controller.updateLog(logToFile.readEntry());
+        controller.updateLog(String.valueOf(logToFile.readEntry()));
     }
 
 
@@ -56,14 +57,13 @@ public class Server {
         try {
             Date date1 = formatter.parse(from);
             Date date2 = formatter.parse(to);
-
+            System.out.println("checking log for dates");
             for(int i = 0; i<log.size();i++) {
-                LogEntry logDate = log.get(i);
-                Date loggedDate = new SimpleDateFormat("yy.MM.dd hh:mm").parse(logDate.getDate());
-                System.out.println("checking log for dates");
+                LogEntry loggedEntry = log.get(i);
+                Date loggedDate = new SimpleDateFormat("yy.MM.dd hh:mm").parse(loggedEntry.getDate());
                 if (loggedDate.after(date1) && loggedDate.before(date2)) {
-                    System.out.println("Found result");
-                    searchResults.addElement(logDate.getDate());
+                    System.out.println("Found result: " + loggedEntry );
+                    searchResults.addElement(loggedEntry.getDate() + " - " +  loggedEntry.getEntry());
                 }
             }
             System.out.println("Res size: " + searchResults.size());
